@@ -1,0 +1,188 @@
+.pd-friend {
+  margin: 6px;
+  width: 32px;
+  height: 32px;
+  float: left;
+  border-radius: 360px;
+}
+
+.pd-friend-name {
+  color: white;
+  float: left;
+  font-family: "Whitney", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-weight: 700;
+  margin-left: 8px;
+  font-size: 20px;
+}
+
+.pd-friend-discrim {
+  color: hsla(0, 0%, 100%, 0.6);
+  float: left;
+  font-family: "Whitney", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 16px;
+  position: relative;
+  top: 4px;
+  padding-right: 6px;
+  &.pd-friend-discrim::before {
+    content: "#";
+  }
+}
+
+.pd-friend-name,
+.pd-friend-discrim {
+  margin-top: 8px;
+}
+
+.pd-star {
+  display: inline;
+  position: relative;
+  top: 0px;
+  padding-left: 1em;
+  background: url("https://canary.discordapp.com/assets/e4d52f4d69d7bba67e5fd70ffe26b70d.svg")
+    50% no-repeat;
+  background-size: 10px 10px;
+
+  &-member {
+    margin-left: 4px;
+  }
+}
+
+.pd-badge,
+.pd-badge.topSectionNormal-2-vo2m {
+  background: none;
+  display: inline-flex;
+}
+
+.pd-badge ~ .botTagRegular-2HEhHi {
+  margin-left: 8px;
+}
+
+.privateChannels-1nO12o .pd-badge,
+.badges > .pd-badge {
+  height: 20px !important;
+  width: auto !important;
+}
+
+.pd-information {
+  width: 15px;
+  min-width: 15px;
+  min-height: 15px;
+  height: 15px;
+  display: none;
+  opacity: 0.4;
+}
+
+.pd-fav-category-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.pd-expand-category {
+  margin-left: auto;
+  cursor: pointer;
+  align-items: center;
+
+  &.expanded {
+    transform: rotate(180deg);
+  }
+}
+
+.pd-information:hover {
+  opacity: 0.9;
+}
+
+.channel-2QD9_O:hover .pd-information {
+  display: block;
+}
+
+.pd-user-settings {
+  width: auto !important;
+  margin-bottom: 32px;
+}
+
+.pd-friend-item {
+  padding: 6px;
+  padding-left: 18px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  height: auto;
+}
+
+.pd-notification-sounds {
+  width: auto !important;
+  padding-bottom: 64px;
+}
+
+.pd-notification-sounds-icon {
+  background: url("https://canary.discordapp.com/assets/f9b93aa0d9985bd2b678da58ed0d75d2.svg")
+    50% no-repeat !important;
+  width: auto;
+  height: auto;
+}
+
+.pd-notification-sounds > div > div > div > .divider-3573oO.marginTop20-3TxNs6 {
+  display: none;
+}
+
+.searchBar-2_Yu-C {
+  width: 100%;
+}
+
+html body .pd-ff-header {
+  // html body is used to get a more precise selector
+  display: flex !important;
+  align-items: center;
+
+  svg {
+    margin-right: 5px;
+    transition: 0.2s;
+    width: 18px;
+    height: 18px;
+    transform-origin: 50% 50%;
+  }
+
+  &.opened svg {
+    transform: rotate(90deg);
+  }
+}
+
+.pd-status-userinline {
+  flex-direction: row;
+  display: flex;
+}
+
+.pd-status-popup {
+  height: fit-content;
+  width: fit-content;
+  background-color: #212121;
+
+  .header {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    > span {
+      display: none;
+    }
+  }
+
+  .contents {
+    padding: 0;
+
+    .inner {
+      background-color: transparent;
+      border: none;
+      padding-bottom: 0;
+      margin-bottom: 2px;
+    }
+  }
+
+  &-text {
+    color: #fff;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+}

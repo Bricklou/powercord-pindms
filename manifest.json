@@ -1,0 +1,8 @@
+{
+  "name": "PinDMs",
+  "version": "1.0.0",
+  "description": "Allows you to pin DMs, making them appear at the top of your DMs/ServerList",
+  "author": "Bricklou#8055",
+  "license": "MIT",
+  "optionalDependencies": ["pc-spotify", "channel-typing"]
+}
