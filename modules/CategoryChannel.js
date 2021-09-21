@@ -213,11 +213,6 @@ module.exports = async function () {
           }
         } else {
           if (category && category.dms.length) {
-            if (
-              res.props.listRef.current.getItems?.()[0] &&
-              res.props.listRef.current.getItems?.()[0]?.type !== "section"
-            )
-              return null;
             this.categoriesInstances.push(
               React.createElement(FavoriteFriends, {
                 classes,
@@ -240,19 +235,9 @@ module.exports = async function () {
       res.props.children = [
         // Previous elements
         ...res.props.children,
+        // Favorite Friends
+        ...this.categoriesInstances.map((instance) => () => instance),
       ];
-
-      // Favorite Friends
-      res.props.children.push(
-        ...this.categoriesInstances.map((instance) => () => {
-          if (
-            res.props.listRef.current.getItems?.()[0] &&
-            res.props.listRef.current.getItems?.()[0]?.type !== "section"
-          )
-            return null;
-          return instance;
-        })
-      );
 
       return res;
     }
