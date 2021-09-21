@@ -6,13 +6,21 @@ Allows you to pin DMs, making them appear at the top of your DMs/ServerList
 
 ## Todo
 
-- [x] DM categories
-- [x] User DM
-    - [x] User context menu items
-    - [x] User DM pin in categories
-- [x] Group DM
-    - [x] Group context menu items
-    - [x] Group DM pin in categories
+- [X] Menu
+    - [X] User DM context menu
+    - [x] Group DM context menu
+    - [ ] Add color to menu item buttons
+- [ ] Channel List
+    - [x] Categories
+    - [ ] Categories count (number of users/groups inside)
+    - [ ] Default categories
+- [ ] Server List
+    - [ ] Pin/Unpin a server
+- [ ] Settings
+    - [ ] Category settings modal
+    - [ ] Category color
+    - [ ] Category name
+    - [ ] Manage categories (create/delete)
 
 ## Contributing
 
