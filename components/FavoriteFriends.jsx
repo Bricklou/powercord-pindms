@@ -12,10 +12,11 @@ module.exports = class FavoriteFriends extends React.PureComponent {
   }
 
   render() {
-    const { classes, category, onCollapse } = this.props;
+    const { classes, category, onCollapse, count } = this.props;
     if (!classes || !category || !category.dms.length) return null;
     const { lastMessageId } = getModule(["lastMessageId"], false);
     const { getDMFromUserId } = getModule(["getDMFromUserId"], false);
+    const { NumberBadge } = getModule(["NumberBadge"], false);
 
     return [
       // Header
@@ -29,6 +30,10 @@ module.exports = class FavoriteFriends extends React.PureComponent {
         }}
       >
         <span className={classes.headerText}>{category.name}</span>
+        <NumberBadge
+          count={count}
+          style={{ backgroundColor: "rgb(var(--accentcolor))", width: "16px" }}
+        />
         <svg
           className={`pd-expand-pd-category ${
             this.state.collaped ? "expanded" : "collapsed"

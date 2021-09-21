@@ -12,7 +12,7 @@ Allows you to pin DMs, making them appear at the top of your DMs/ServerList
     - [ ] Add color to menu item buttons
 - [ ] Channel List
     - [x] Categories
-    - [ ] Categories count (number of users/groups inside)
+    - [x] Categories count (number of users/groups inside)
     - [ ] Default categories
 - [ ] Server List
     - [ ] Pin/Unpin a server

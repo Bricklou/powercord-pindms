@@ -219,6 +219,7 @@ module.exports = async function () {
                 ConnectedPrivateChannel,
                 category,
                 selectedChannelId: res.props.selectedChannelId,
+                count: category.dms.length,
                 onCollapse(value) {
                   settingsMgr.set(
                     `dmCategories.${category.id}.collapse`,
