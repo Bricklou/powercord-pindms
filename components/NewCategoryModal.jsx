@@ -25,7 +25,6 @@ module.exports = (settingsMgr, id, callback) => {
       const max = Math.pow(10, 17) - 1;
       const gen = () => Math.floor(Math.random() * (max - min) + min);
       let id = gen();
-      console.log(id);
 
       while (keys.includes(id)) {
         id = gen();

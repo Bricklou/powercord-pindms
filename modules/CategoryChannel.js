@@ -139,7 +139,6 @@ module.exports = async function () {
       };
       if (entity.type) {
         obj.channel = entity;
-        console.log(entity);
 
         obj.channelName = entity.name.length
           ? entity.name
