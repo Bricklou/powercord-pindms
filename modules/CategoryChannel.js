@@ -242,17 +242,17 @@ module.exports = async function () {
         ...res.props.children,
       ];
 
-      if (
-        !(
-          res.props.listRef.current.getItems?.()[0] &&
-          res.props.listRef.current.getItems?.()[0]?.type !== "section"
-        )
-      ) {
-        // Favorite Friends
-        res.props.children.push(
-          ...this.categoriesInstances.map((instance) => () => instance)
-        );
-      }
+      // Favorite Friends
+      res.props.children.push(
+        ...this.categoriesInstances.map((instance) => () => {
+          if (
+            res.props.listRef.current.getItems?.()[0] &&
+            res.props.listRef.current.getItems?.()[0]?.type !== "section"
+          )
+            return null;
+          return instance;
+        })
+      );
 
       return res;
     }
