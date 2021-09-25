@@ -54,10 +54,6 @@ module.exports = class PinDMs extends Plugin {
     this.loadStylesheet("style.scss");
 
     // Constants
-    this.FRIEND_DATA = {
-      statusStorage: {},
-      lastMessageID: {},
-    };
 
     await this.start();
   }

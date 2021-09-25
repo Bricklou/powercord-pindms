@@ -14,6 +14,7 @@ Allows you to pin DMs, making them appear at the top of your DMs/ServerList
     - [x] Categories
     - [x] Categories count (number of users/groups inside)
     - [ ] Default categories
+    - [ ] Collapse categories
 - [ ] Server List
     - [ ] Pin/Unpin a server
 - [ ] Settings
@@ -29,4 +30,4 @@ Pull request and issues are open, if you find a bug, want help to finish the plu
 ## Credit
 
 - Thanks to [Better Friend](https://github.com/powercord-community/betterfriends) for the original project structure
-- Thanks to [Pin DMs](https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/PinDMs) for the orignal plugin idea
+- Thanks to [Pin DMs](https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/PinDMs) for the original plugin idea

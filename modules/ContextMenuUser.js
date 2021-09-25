@@ -46,6 +46,7 @@ module.exports = async function () {
                 id: `${item.id}`,
                 action: () => {
                   settingsMgr.push(`dmCategories.${item.id}.dms`, id, true);
+                  this.reload();
                 },
               })
             );

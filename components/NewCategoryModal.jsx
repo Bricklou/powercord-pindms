@@ -63,8 +63,8 @@ module.exports = (settingsMgr, id, callback) => {
                   name: this.state.name,
                   pos: settingsMgr.getLength("dmCategories") || 0,
                 });
-                closeModal();
                 callback();
+                closeModal();
               }}
               type="submit"
             >

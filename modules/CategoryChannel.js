@@ -38,6 +38,8 @@ module.exports = async function () {
     ...(await getModule(["avatar", "muted", "selected"])),
     ...(await getModule(["privateChannelsHeaderContainer"])),
   };
+  const { lastMessageId } = getModule(["lastMessageId"], false);
+  const { getDMFromUserId } = getModule(["getDMFromUserId"], false);
 
   this.categoriesInstances = [];
 
@@ -209,6 +211,7 @@ module.exports = async function () {
           if (instance.props.update) {
             instance.props.category = category;
             instance.props.selectedChannelId = res.props.selectedChannelId;
+            instance.props.count = category.dms.length;
             instance.props.update();
           }
         } else {
@@ -216,9 +219,7 @@ module.exports = async function () {
             this.categoriesInstances.push(
               React.createElement(FavoriteFriends, {
                 classes,
-                ConnectedPrivateChannel,
                 category,
-                selectedChannelId: res.props.selectedChannelId,
                 count: category.dms.length,
                 onCollapse(value) {
                   settingsMgr.set(
@@ -235,9 +236,29 @@ module.exports = async function () {
       res.props.children = [
         // Previous elements
         ...res.props.children,
-        // Favorite Friends
-        ...this.categoriesInstances.map((instance) => () => instance),
       ];
+      this.categoriesInstances.forEach((instance) => {
+        const category = instance.props.category;
+        instance.props.key = `pd-${category.id}`;
+
+        const dms = category.dms
+          .sort((a, b) => {
+            lastMessageId(getDMFromUserId(b)) -
+              lastMessageId(getDMFromUserId(a));
+          })
+          .map(
+            (userId) => () =>
+              React.createElement(ConnectedPrivateChannel, {
+                userId: userId,
+                currentSelectedChannel: res.props.selectedChannelId,
+                key: `${userId}`,
+              })
+          );
+
+        res.props.children.push(() => instance, dms);
+      });
+
+      res.props.children = res.props.children.flat(1);
 
       return res;
     }
