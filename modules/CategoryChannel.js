@@ -112,7 +112,7 @@ module.exports = async function () {
       statusStore,
       powercord.api.settings.store,
     ],
-    ({ userId, currentSelectedChannel }) => {
+    ({ userId, selectedChannelId }) => {
       const entity = userStore.getUser(userId) ||
         channelStore.getChannel(userId) || {
           id: "0",
@@ -122,31 +122,25 @@ module.exports = async function () {
           isSystemDM: () => false,
         };
 
-      const channelId = channelStore.getDMFromUserId(userId);
-      const selected = currentSelectedChannel === channelId;
-
       let obj = {
-        user: undefined,
         channel: undefined,
-        selected,
         channelName: "",
-        isMobile: undefined,
-        status: undefined,
-        activities: undefined,
         infoModal: powercord.api.settings.store.getSetting(
           "pindms",
           "infomodal"
         ),
         isBetterFriends: true,
       };
-      if (entity.type) {
+      if (entity.type === 3) {
         obj.channel = entity;
-
+        obj.selected = selectedChannelId === userId;
         obj.channelName = entity.name.length
           ? entity.name
           : entity.rawRecipients.map((r) => r.username).join(", ");
       } else {
+        const channelId = channelStore.getDMFromUserId(userId);
         obj.user = entity;
+        obj.selected = selectedChannelId === channelId;
         obj.channel = channelId
           ? channelStore.getChannel(channelId)
           : {
@@ -246,14 +240,13 @@ module.exports = async function () {
             lastMessageId(getDMFromUserId(b)) -
               lastMessageId(getDMFromUserId(a));
           })
-          .map(
-            (userId) => () =>
-              React.createElement(ConnectedPrivateChannel, {
-                userId: userId,
-                currentSelectedChannel: res.props.selectedChannelId,
-                key: `${userId}`,
-              })
-          );
+          .map((userId) => () => {
+            return React.createElement(ConnectedPrivateChannel, {
+              userId: userId,
+              key: `${userId}`,
+              selectedChannelId: res.props.selectedChannelId,
+            });
+          });
 
         res.props.children.push(() => instance, dms);
       });
