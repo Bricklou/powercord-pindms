@@ -237,8 +237,10 @@ module.exports = async function () {
 
         const dms = category.dms
           .sort((a, b) => {
-            lastMessageId(getDMFromUserId(b)) -
-              lastMessageId(getDMFromUserId(a));
+            return (
+              lastMessageId(getDMFromUserId(b)) -
+              lastMessageId(getDMFromUserId(a))
+            );
           })
           .map((userId) => () => {
             return React.createElement(ConnectedPrivateChannel, {
