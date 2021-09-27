@@ -15,6 +15,7 @@ Allows you to pin DMs, making them appear at the top of your DMs/ServerList
     - [x] Categories count (number of users/groups inside)
     - [ ] Default categories
     - [x] Collapse categories
+    - [ ] FIX: Find a way to trigger the channel list to update rerender childrens
 - [ ] Server List
     - [ ] Pin/Unpin a server
 - [ ] Settings
@@ -22,7 +23,6 @@ Allows you to pin DMs, making them appear at the top of your DMs/ServerList
     - [ ] Category color
     - [ ] Category name
     - [ ] Manage categories (create/delete)
-
 ## Contributing
 
 Pull request and issues are open, if you find a bug, want help to finish the plugin or just propose features, feel free to contribute.
