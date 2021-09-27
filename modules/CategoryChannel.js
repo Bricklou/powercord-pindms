@@ -215,11 +215,12 @@ module.exports = async function () {
                 classes,
                 category,
                 count: category.dms.length,
-                onCollapse(value) {
+                onCollapse(value, _el) {
                   settingsMgr.set(
                     `dmCategories.${category.id}.collapse`,
                     value
                   );
+                  _this.reload();
                 },
               })
             );
@@ -235,22 +236,32 @@ module.exports = async function () {
         const category = instance.props.category;
         instance.props.key = `pd-${category.id}`;
 
-        const dms = category.dms
-          .sort((a, b) => {
-            return (
-              lastMessageId(getDMFromUserId(b)) -
-              lastMessageId(getDMFromUserId(a))
-            );
-          })
-          .map((userId) => () => {
-            return React.createElement(ConnectedPrivateChannel, {
-              userId: userId,
-              key: `${userId}`,
-              selectedChannelId: res.props.selectedChannelId,
-            });
-          });
+        res.props.children.push(() => instance);
 
-        res.props.children.push(() => instance, dms);
+        console.log(
+          "val:",
+          settingsMgr.get(`dmCategories.${category.id}.collapse`)
+        );
+
+        if (settingsMgr.get(`dmCategories.${category.id}.collapse`)) {
+          console.log("test");
+          const dms = category.dms
+            .sort((a, b) => {
+              return (
+                lastMessageId(getDMFromUserId(b)) -
+                lastMessageId(getDMFromUserId(a))
+              );
+            })
+            .map((userId) => () => {
+              return React.createElement(ConnectedPrivateChannel, {
+                userId: userId,
+                key: `${userId}`,
+                selectedChannelId: res.props.selectedChannelId,
+              });
+            });
+
+          res.props.children.push(dms);
+        }
       });
 
       res.props.children = res.props.children.flat(1);

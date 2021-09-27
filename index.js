@@ -11,7 +11,6 @@ module.exports = class PinDMs extends Plugin {
   async startPlugin() {
     // Default settings handler
     this.DEFAULT_SETTINGS = {
-      favfriends: [],
       notifsounds: {},
       infomodal: true,
       displaystar: true,

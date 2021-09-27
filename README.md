@@ -14,7 +14,7 @@ Allows you to pin DMs, making them appear at the top of your DMs/ServerList
     - [x] Categories
     - [x] Categories count (number of users/groups inside)
     - [ ] Default categories
-    - [ ] Collapse categories
+    - [x] Collapse categories
 - [ ] Server List
     - [ ] Pin/Unpin a server
 - [ ] Settings
