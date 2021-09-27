@@ -1,4 +1,5 @@
 const { getModule, React } = require("powercord/webpack");
+const helper = require("../utils/helper");
 
 module.exports = class FavoriteFriends extends React.PureComponent {
   constructor(props) {
@@ -7,13 +8,15 @@ module.exports = class FavoriteFriends extends React.PureComponent {
     props.update = this.forceUpdate.bind(this);
 
     this.state = {
-      collapse: this.props.category.collapse ?? true,
+      collapse: this.props.category.collapse
+        ? this.props.category.collapse
+        : false,
     };
   }
 
   render() {
-    const { classes, category, count, onCollapse } = this.props;
-    if (!classes || !category || !category.dms.length || !onCollapse)
+    const { classes, category, count, settingsMgr } = this.props;
+    if (!classes || !category || !category.dms.length || !settingsMgr)
       return null;
     const { NumberBadge } = getModule(["NumberBadge"], false);
 
@@ -25,7 +28,11 @@ module.exports = class FavoriteFriends extends React.PureComponent {
           this.setState({
             collapse: !this.state.collapse,
           });
-          onCollapse(this.state.collapse, this);
+          settingsMgr.set(
+            `dmCategories.${category.id}.collapse`,
+            this.state.collapse
+          );
+          helper.forceUpdateElement("#private-channels");
         }}
       >
         <span className={classes.headerText}>{category.name}</span>
@@ -36,7 +43,7 @@ module.exports = class FavoriteFriends extends React.PureComponent {
 
         <svg
           className={`dm-category-collapse-icon ${
-            this.state.collapse ? "expanded" : "collapsed"
+            !this.state.collapse ? "expanded" : "collapsed"
           }`}
           height={15}
           width={15}

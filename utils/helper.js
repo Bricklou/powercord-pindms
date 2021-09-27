@@ -19,4 +19,13 @@ module.exports = {
     }
     return null;
   },
+
+  forceUpdateElement(el) {
+    if (typeof el === "string") {
+      el = document.querySelector(el);
+    }
+    if (!el) return;
+    el.dispatchEvent(new Event("focusin"));
+    el.dispatchEvent(new Event("focusout"));
+  },
 };

@@ -215,13 +215,7 @@ module.exports = async function () {
                 classes,
                 category,
                 count: category.dms.length,
-                onCollapse(value, _el) {
-                  settingsMgr.set(
-                    `dmCategories.${category.id}.collapse`,
-                    value
-                  );
-                  _this.reload();
-                },
+                settingsMgr,
               })
             );
           }
@@ -238,13 +232,7 @@ module.exports = async function () {
 
         res.props.children.push(() => instance);
 
-        console.log(
-          "val:",
-          settingsMgr.get(`dmCategories.${category.id}.collapse`)
-        );
-
         if (settingsMgr.get(`dmCategories.${category.id}.collapse`)) {
-          console.log("test");
           const dms = category.dms
             .sort((a, b) => {
               return (
@@ -269,6 +257,9 @@ module.exports = async function () {
       return res;
     }
   );
+
+  helper.forceUpdateElement("#private-channels");
+
   ConnectedPrivateChannelsList.default.displayName =
     "ConnectedPrivateChannelsList";
 };

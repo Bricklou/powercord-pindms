@@ -47,6 +47,7 @@ module.exports = async function () {
                 id: `${item.id}`,
                 action: () => {
                   settingsMgr.push(`dmCategories.${item.id}.dms`, id, true);
+                  helper.forceUpdateElement("#private-channels");
                 },
               })
             );
@@ -59,7 +60,7 @@ module.exports = async function () {
             id: "pd-new-channellist",
             action: () => {
               contextAction.addToNewCategoryModal(settingsMgr, id, () => {
-                this.reload();
+                helper.forceUpdateElement("#private-channels");
               });
             },
           })
@@ -88,8 +89,8 @@ module.exports = async function () {
               if (dms && Array.isArray(dms) && dms.includes(id)) {
                 dms = dms.filter((item) => item !== id);
                 settingsMgr.set(`dmCategories.${currentCategory.id}.dms`, dms);
-                this.reload();
               }
+              helper.forceUpdateElement("#private-channels");
             },
           })
         );
