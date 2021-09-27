@@ -13,8 +13,9 @@ module.exports = class PinDMs extends Plugin {
     this.DEFAULT_SETTINGS = {
       notifsounds: {},
       infomodal: true,
-      displaystar: true,
-      statuspopup: true,
+      sortoptions: true,
+			mutualguilds: true,
+			showtotal: true,
 
       // Updated settings
       general: {
@@ -53,22 +54,19 @@ module.exports = class PinDMs extends Plugin {
     this.loadStylesheet("style.scss");
 
     // Constants
+    this.FRIEND_DATA = {
+      lastMessageID: {}
+    };
 
     await this.start();
   }
 
   async start() {
     this.instances = {};
-    this.FAV_FRIENDS = this.settings.get("favfriends");
-    if (!this.FAV_FRIENDS) {
-      this.FAV_FRIENDS = [];
+    if (!this.settings.get("dmCategories")) {
       for (const setting of Object.keys(this.DEFAULT_SETTINGS)) {
-        if (this.DEFAULT_SETTINGS[setting] === undefined && !this.FAV_FRIENDS) {
-          /* eslint-disable-line */ /* I know this is bad practice, hopefully I'll find a better solution soon */
-          this.settings.set(
-            this.settings.get(setting, this.DEFAULT_SETTINGS[setting])
-          );
-        }
+        /* eslint-disable-line */ /* I know this is bad practice, hopefully I'll find a better solution soon */
+        if (this.DEFAULT_SETTINGS[setting]) this.settings.set(setting, this.settings.get(setting, this.DEFAULT_SETTINGS[setting]));
       }
     }
 
@@ -85,9 +83,9 @@ module.exports = class PinDMs extends Plugin {
     }
 
     // Unload all modules if this user has no favorite friends
-    if (this.FAV_FRIENDS && this.FAV_FRIENDS.length >= 0) {
-      await this.load();
-    }
+    // if (this.FAV_FRIENDS && this.FAV_FRIENDS.length >= 0) {
+    await this.load();
+    // }
   }
 
   /*
