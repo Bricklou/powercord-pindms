@@ -58,7 +58,9 @@ module.exports = async function () {
             label: "Add to new Category",
             id: "pd-new-channellist",
             action: () => {
-              contextAction.addToNewCategoryModal(settingsMgr, id, () => helper.forceUpdateElement("#private-channels"));
+              contextAction.addToNewCategoryModal(settingsMgr, id, () =>
+                helper.forceUpdateElement("#private-channels")
+              );
             },
           })
         );
@@ -86,7 +88,6 @@ module.exports = async function () {
               if (dms && Array.isArray(dms) && dms.includes(id)) {
                 dms = dms.filter((item) => item !== id);
                 settingsMgr.set(`dmCategories.${currentCategory.id}.dms`, dms);
-                helper.forceUpdateElement("#private-channels");
               }
               helper.forceUpdateElement("#private-channels");
             },

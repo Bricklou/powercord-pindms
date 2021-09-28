@@ -1,11 +1,14 @@
-
 const { inject } = require("powercord/injector");
 const { open: openModal } = require("powercord/modal");
 const {
   Icons: { Keyboard, Pin },
   Tooltip,
 } = require("powercord/components");
-const { React, getModuleByDisplayName, getModule } = require("powercord/webpack");
+const {
+  React,
+  getModuleByDisplayName,
+  getModule,
+} = require("powercord/webpack");
 
 const FavoriteFriends = require("../components/FavoriteFriends");
 const InformationModal = require("../components/InformationModal");
@@ -40,25 +43,35 @@ module.exports = async function () {
     PrivateChannel.prototype,
     "render",
     function (args, res) {
-      if (Object.values(settingsMgr.get("dmCategories")).some(cat => cat.dms.includes(this.props.user?.id))) {
-        if (!settingsMgr.get('infomodal')) return res;
-        if (!res.props.className.includes('pd-pinChannel')) res.props.className += ' pd-pinChannel';
+      if (
+        Object.values(settingsMgr.get("dmCategories")).some((cat) =>
+          cat.dms.includes(this.props.user?.id)
+        )
+      ) {
+        if (!settingsMgr.get("infomodal")) return res;
+        if (!res.props.className.includes("pd-pinChannel"))
+          res.props.className += " pd-pinChannel";
         res.props.children.props.onClick = () => {};
-			  res.props.children = [
+        res.props.children = [
           React.createElement(
             Tooltip,
-            { text: 'User information', position: 'top' },
+            { text: "User information", position: "top" },
             React.createElement(Keyboard, {
-              className: 'pd-information',
-              onClick: e => {
+              className: "pd-information",
+              onClick: (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                const info = _this.FRIEND_DATA.lastMessageID[this.props.user.id];
+                const info =
+                  _this.FRIEND_DATA.lastMessageID[this.props.user.id];
                 openModal(() =>
                   React.createElement(InformationModal, {
-                    user: { ...this.props.user, isSystemUser: () => false, isSystemDM: () => false },
-                    channel: !info ? 'nothing' : info.channel,
-                    message: !info ? 'nothing' : info.id,
+                    user: {
+                      ...this.props.user,
+                      isSystemUser: () => false,
+                      isSystemDM: () => false,
+                    },
+                    channel: !info ? "nothing" : info.channel,
+                    message: !info ? "nothing" : info.id,
                   })
                 );
               },
@@ -66,13 +79,17 @@ module.exports = async function () {
           ),
           res.props.children,
         ];
-      } else if (!Object.values(settingsMgr.get("dmCategories")).some(cat => cat.dms.includes(this.props.channel?.id)))
+      } else if (
+        !Object.values(settingsMgr.get("dmCategories")).some((cat) =>
+          cat.dms.includes(this.props.channel?.id)
+        )
+      )
         res.props.children = [
           React.createElement(
             Tooltip,
-            { text: 'Pin', position: 'top', className: 'pd-pin' },
+            { text: "Pin", position: "top", className: "pd-pin" },
             React.createElement(Pin, {
-              className: 'pd-pin',
+              className: "pd-pin",
               onClick: () => {
                 //do shit
               },
@@ -137,7 +154,7 @@ module.exports = async function () {
                 classes,
                 category,
                 count: category.dms.length,
-                settingsMgr
+                settingsMgr,
               })
             );
           }
@@ -146,21 +163,28 @@ module.exports = async function () {
 
       res.props.children = [...res.props.children];
 
-      this.categoriesInstances.forEach(instance => {
+      this.categoriesInstances.forEach((instance) => {
         const category = instance.props.category;
         instance.props.key = `pd-${category.id}`;
-  
+
         const dms = category.dms
-          .sort((a, b) => lastMessageId(getDMFromUserId(b)) - lastMessageId(getDMFromUserId(a)))
+          .sort(
+            (a, b) =>
+              lastMessageId(getDMFromUserId(b)) -
+              lastMessageId(getDMFromUserId(a))
+          )
           .map(
-            userId => () =>
+            (userId) => () =>
               settingsMgr.get(`dmCategories.${category.id}.collapse`, false) &&
               React.createElement(Channel, {
                 channelId: getDMFromUserId(userId) || userId,
-                selected: (getDMFromUserId(userId) || userId) === res.props.selectedChannelId,
+                selected:
+                  (getDMFromUserId(userId) || userId) ===
+                  res.props.selectedChannelId,
+                key: `${userId}`,
               })
           );
-  
+
         res.props.children.push(() => instance, dms);
       });
 
@@ -172,5 +196,6 @@ module.exports = async function () {
 
   helper.forceUpdateElement("#private-channels");
 
-  ConnectedPrivateChannelsList.default.displayName = "ConnectedPrivateChannelsList";
+  ConnectedPrivateChannelsList.default.displayName =
+    "ConnectedPrivateChannelsList";
 };

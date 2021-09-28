@@ -8,7 +8,7 @@ module.exports = class FavoriteFriends extends React.PureComponent {
     props.update = this.forceUpdate.bind(this);
 
     this.state = {
-      collapse: this.props.category.collapse ?? false
+      collapse: this.props.category.collapse ?? false,
     };
   }
 

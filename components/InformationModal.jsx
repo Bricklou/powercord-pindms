@@ -1,4 +1,8 @@
-const { React, getModule, constants: { Routes } } = require("powercord/webpack");
+const {
+  React,
+  getModule,
+  constants: { Routes },
+} = require("powercord/webpack");
 const { Confirm } = require("powercord/components/modal");
 const { close: closeModal } = require("powercord/modal");
 
@@ -41,7 +45,7 @@ module.exports = class InformationModal extends React.Component {
     const getGuild = (await getModule(["getGuild"])).getGuild;
     const getChannel = (await getModule(["getChannel"])).getChannel;
     const channel = await getChannel(this.props.channel);
-    const { transitionTo } = await getModule(['transitionTo']);
+    const { transitionTo } = await getModule(["transitionTo"]);
     this.setState({
       getChannel,
       getUser,
@@ -83,12 +87,12 @@ module.exports = class InformationModal extends React.Component {
                 {guild ? (
                   <span>
                     <span
-											className='wrapperHover-1GktnT wrapper-3WhCwL'
-											onClick={() => {
-												transitionTo(Routes.CHANNEL(guild.id, channel.id));
-												closeModal();
-											}}
-										>
+                      className="wrapperHover-1GktnT wrapper-3WhCwL"
+                      onClick={() => {
+                        transitionTo(Routes.CHANNEL(guild.id, channel.id));
+                        closeModal();
+                      }}
+                    >
                       #{channel.name}
                     </span>{" "}
                     ({guild.name})

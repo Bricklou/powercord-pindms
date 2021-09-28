@@ -14,7 +14,10 @@ module.exports = async function () {
   ]);
 
   const custom = this.settings.get("notifsounds", {});
-  const isPinned = (id) => Object.values(this.settings.get("dmCategories")).some(cat => cat.dms.includes(id));
+  const isPinned = (id) =>
+    Object.values(this.settings.get("dmCategories")).some((cat) =>
+      cat.dms.includes(id)
+    );
 
   const AUDIO = Object.keys(custom).map((s) => {
     const sound = custom[s];

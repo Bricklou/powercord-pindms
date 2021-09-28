@@ -14,8 +14,8 @@ module.exports = class PinDMs extends Plugin {
       notifsounds: {},
       infomodal: true,
       sortoptions: true,
-			mutualguilds: true,
-			showtotal: true,
+      mutualguilds: true,
+      showtotal: true,
 
       // Updated settings
       general: {
@@ -55,7 +55,7 @@ module.exports = class PinDMs extends Plugin {
 
     // Constants
     this.FRIEND_DATA = {
-      lastMessageID: {}
+      lastMessageID: {},
     };
 
     await this.start();
@@ -66,7 +66,11 @@ module.exports = class PinDMs extends Plugin {
     if (!this.settings.get("dmCategories")) {
       for (const setting of Object.keys(this.DEFAULT_SETTINGS)) {
         /* eslint-disable-line */ /* I know this is bad practice, hopefully I'll find a better solution soon */
-        if (this.DEFAULT_SETTINGS[setting]) this.settings.set(setting, this.settings.get(setting, this.DEFAULT_SETTINGS[setting]));
+        if (this.DEFAULT_SETTINGS[setting])
+          this.settings.set(
+            setting,
+            this.settings.get(setting, this.DEFAULT_SETTINGS[setting])
+          );
       }
     }
 
@@ -83,9 +87,8 @@ module.exports = class PinDMs extends Plugin {
     }
 
     // Unload all modules if this user has no favorite friends
-    // if (this.FAV_FRIENDS && this.FAV_FRIENDS.length >= 0) {
+
     await this.load();
-    // }
   }
 
   /*

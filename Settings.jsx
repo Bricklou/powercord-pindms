@@ -1,7 +1,11 @@
 const { React } = require("powercord/webpack");
 const { getModule, getModuleByDisplayName } = require("powercord/webpack");
-const { SwitchItem, TextInput, Category } = require("powercord/components/settings");
-const { Button } = require('powercord/components')
+const {
+  SwitchItem,
+  TextInput,
+  Category,
+} = require("powercord/components/settings");
+const { Button } = require("powercord/components");
 const { Sounds } = require("./Constants");
 
 module.exports = class Settings extends React.Component {
@@ -14,10 +18,10 @@ module.exports = class Settings extends React.Component {
     this.state = {
       notifsounds: get("notifsounds", {}),
       infomodal: get("infomodal", true),
-      sortoptions: get('sortoptions', true),
-			mutualguilds: get('mutualguilds', true),
-			showtotal: get('showtotal', true),
-      opened: false
+      sortoptions: get("sortoptions", true),
+      mutualguilds: get("mutualguilds", true),
+      showtotal: get("showtotal", true),
+      opened: false,
     };
   }
 
@@ -34,7 +38,7 @@ module.exports = class Settings extends React.Component {
     }
     const { Text, playSound } = this.state;
 
-    const dmCategories = Object.values(this.props.getSetting('dmCategories'));
+    const dmCategories = Object.values(this.props.getSetting("dmCategories"));
     return (
       <div>
         <SwitchItem
@@ -50,37 +54,37 @@ module.exports = class Settings extends React.Component {
         </SwitchItem>
 
         <SwitchItem
-					note='Have sort options in the friend list'
-					value={this.state.sortoptions}
-					onChange={() => {
-						this._set('sortoptions');
-						this.plugin.reload("FriendsList");
-					}}
-				>
-					Show sort options
-				</SwitchItem>
-
-				<SwitchItem
-					note='Show mutual guilds in the friend list'
-					value={this.state.mutualguilds}
-					onChange={() => {
-						this._set('mutualguilds');
-						this.plugin.reload("FriendsList");
-					}}
-				>
-					Show mutual guilds
-				</SwitchItem>
-
-				<SwitchItem
-					note='Show total amount for all/requested/blocked'
-					value={this.state.showtotal}
+          note="Have sort options in the friend list"
+          value={this.state.sortoptions}
           onChange={() => {
-						this._set('showtotal');
-						this.plugin.reload("FriendsList");
-					}}
-				>
-					Show total amount for all/requested/blocked
-				</SwitchItem>
+            this._set("sortoptions");
+            this.plugin.reload("FriendsList");
+          }}
+        >
+          Show sort options
+        </SwitchItem>
+
+        <SwitchItem
+          note="Show mutual guilds in the friend list"
+          value={this.state.mutualguilds}
+          onChange={() => {
+            this._set("mutualguilds");
+            this.plugin.reload("FriendsList");
+          }}
+        >
+          Show mutual guilds
+        </SwitchItem>
+
+        <SwitchItem
+          note="Show total amount for all/requested/blocked"
+          value={this.state.showtotal}
+          onChange={() => {
+            this._set("showtotal");
+            this.plugin.reload("FriendsList");
+          }}
+        >
+          Show total amount for all/requested/blocked
+        </SwitchItem>
 
         <h5 className="h5-18_1nd title-3sZWYQ size12-3R0845 height16-2Lv3qA weightSemiBold-NJexzi marginBottom8-AtZOdT marginTop40-i-78cZ">
           Notification Sounds
@@ -129,16 +133,26 @@ module.exports = class Settings extends React.Component {
             </div>
           </div>
         ))}
-        <Category name='Pinned Categories' opened={this.state.opened} onChange={() => this.setState({ opened: !this.state.opened })}>
-					{dmCategories.map(c => (
-						<div className='pd-setting-category'>
-							<TextInput defaultValue={c.name} placeholder='category name' />
+        <Category
+          name="Pinned Categories"
+          opened={this.state.opened}
+          onChange={() => this.setState({ opened: !this.state.opened })}
+        >
+          {dmCategories.map((c) => (
+            <div className="pd-setting-category">
+              <TextInput defaultValue={c.name} placeholder="category name" />
               <Button color={Button.Colors.RED}>Remove</Button>
-              <Button color={Button.Colors.BRAND} size={Button.Sizes.LARGE} disabled>Category color</Button>
-						</div>
-					))}
+              <Button
+                color={Button.Colors.BRAND}
+                size={Button.Sizes.LARGE}
+                disabled
+              >
+                Category color
+              </Button>
+            </div>
+          ))}
           <Button color={Button.Colors.BRAND}>Add</Button>
-				</Category>
+        </Category>
       </div>
     );
   }
