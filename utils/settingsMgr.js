@@ -18,8 +18,8 @@ module.exports = (settings) => ({
     settings.set(key, obj);
   },
 
-  get(path) {
-    return settings.get(path);
+  get(path, _default = undefined) {
+    return settings.get(path) ?? _default;
   },
 
   has(path) {

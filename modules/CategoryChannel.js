@@ -167,25 +167,28 @@ module.exports = async function () {
         const category = instance.props.category;
         instance.props.key = `pd-${category.id}`;
 
-        const dms = category.dms
-          .sort(
-            (a, b) =>
-              lastMessageId(getDMFromUserId(b)) -
-              lastMessageId(getDMFromUserId(a))
-          )
-          .map(
-            (userId) => () =>
-              settingsMgr.get(`dmCategories.${category.id}.collapse`, false) &&
-              React.createElement(Channel, {
-                channelId: getDMFromUserId(userId) || userId,
-                selected:
-                  (getDMFromUserId(userId) || userId) ===
-                  res.props.selectedChannelId,
-                key: `${userId}`,
-              })
-          );
+        res.props.children.push(() => instance);
 
-        res.props.children.push(() => instance, dms);
+        if (settingsMgr.get(`dmCategories.${category.id}.collapse`)) {
+          const dms = category.dms
+            .sort(
+              (a, b) =>
+                lastMessageId(getDMFromUserId(b)) -
+                lastMessageId(getDMFromUserId(a))
+            )
+            .map(
+              (userId) => () =>
+                React.createElement(Channel, {
+                  channelId: getDMFromUserId(userId) || userId,
+                  selected:
+                    (getDMFromUserId(userId) || userId) ===
+                    res.props.selectedChannelId,
+                  key: `${userId}`,
+                })
+            );
+
+          res.props.children.push(dms);
+        }
       });
 
       res.props.children = res.props.children.flat(1);
