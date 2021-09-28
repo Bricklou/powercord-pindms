@@ -13,7 +13,7 @@ module.exports = class Settings extends React.Component {
     super(props);
 
     const get = props.getSetting;
-    this.plugin = powercord.pluginManager.get("powercord-pindms");
+    this.plugin = powercord.pluginManager.get("powercord-pinsdms");
 
     this.state = {
       notifsounds: get("notifsounds", {}),
@@ -21,7 +21,11 @@ module.exports = class Settings extends React.Component {
       sortoptions: get("sortoptions", true),
       mutualguilds: get("mutualguilds", true),
       showtotal: get("showtotal", true),
-      opened: false,
+
+      openCat: {
+        friendList: false,
+        pinCategories: false,
+      },
     };
   }
 
@@ -41,50 +45,63 @@ module.exports = class Settings extends React.Component {
     const dmCategories = Object.values(this.props.getSetting("dmCategories"));
     return (
       <div>
-        <SwitchItem
-          note="Toggles the functionality of the information button within the DM list on favorited friends"
-          style={{ marginTop: "16px" }}
-          value={this.state.infomodal}
-          onChange={() => {
-            this._set("infomodal");
-            this.plugin.reload("InformationModal");
-          }}
+        <Category
+          name="Friend list"
+          opened={this.state.openCat.friendList}
+          onChange={() =>
+            this.setState({
+              openCat: {
+                ...this.state.openCat,
+                friendList: !this.state.openCat.friendList,
+              },
+            })
+          }
         >
-          Information Modal
-        </SwitchItem>
+          <SwitchItem
+            note="Toggles the functionality of the information button within the DM list on favorited friends"
+            style={{ marginTop: "16px" }}
+            value={this.state.infomodal}
+            onChange={(value) => {
+              this._set("infomodal", value);
+              this.plugin.reload("InformationModal");
+            }}
+          >
+            Information Modal
+          </SwitchItem>
 
-        <SwitchItem
-          note="Have sort options in the friend list"
-          value={this.state.sortoptions}
-          onChange={() => {
-            this._set("sortoptions");
-            this.plugin.reload("FriendsList");
-          }}
-        >
-          Show sort options
-        </SwitchItem>
+          <SwitchItem
+            note="Have sort options in the friend list"
+            value={this.state.sortoptions}
+            onChange={(value) => {
+              this._set("sortoptions", value);
+              this.plugin.reload("FriendsList");
+            }}
+          >
+            Show sort options
+          </SwitchItem>
 
-        <SwitchItem
-          note="Show mutual guilds in the friend list"
-          value={this.state.mutualguilds}
-          onChange={() => {
-            this._set("mutualguilds");
-            this.plugin.reload("FriendsList");
-          }}
-        >
-          Show mutual guilds
-        </SwitchItem>
+          <SwitchItem
+            note="Show mutual guilds in the friend list"
+            value={this.state.mutualguilds}
+            onChange={(value) => {
+              this._set("mutualguilds", value);
+              this.plugin.reload("FriendsList");
+            }}
+          >
+            Show mutual guilds
+          </SwitchItem>
 
-        <SwitchItem
-          note="Show total amount for all/requested/blocked"
-          value={this.state.showtotal}
-          onChange={() => {
-            this._set("showtotal");
-            this.plugin.reload("FriendsList");
-          }}
-        >
-          Show total amount for all/requested/blocked
-        </SwitchItem>
+          <SwitchItem
+            note="Show total amount for all/requested/blocked"
+            value={this.state.showtotal}
+            onChange={(value) => {
+              this._set("showtotal", value);
+              this.plugin.reload("FriendsList");
+            }}
+          >
+            Show total amount for all/requested/blocked
+          </SwitchItem>
+        </Category>
 
         <h5 className="h5-18_1nd title-3sZWYQ size12-3R0845 height16-2Lv3qA weightSemiBold-NJexzi marginBottom8-AtZOdT marginTop40-i-78cZ">
           Notification Sounds
@@ -135,8 +152,15 @@ module.exports = class Settings extends React.Component {
         ))}
         <Category
           name="Pinned Categories"
-          opened={this.state.opened}
-          onChange={() => this.setState({ opened: !this.state.opened })}
+          opened={this.state.openCat.pinCategories}
+          onChange={() =>
+            this.setState({
+              openCat: {
+                ...this.state.openCat,
+                pinCategories: !this.state.openCat.pinCategories,
+              },
+            })
+          }
         >
           {dmCategories.map((c) => (
             <div className="pd-setting-category">
@@ -157,7 +181,7 @@ module.exports = class Settings extends React.Component {
     );
   }
 
-  _set(key, value = !this.state[key], defaultValue) {
+  _set(key, value, defaultValue) {
     if (!value && defaultValue) {
       value = defaultValue;
     }
