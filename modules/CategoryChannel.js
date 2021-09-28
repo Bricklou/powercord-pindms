@@ -1,20 +1,16 @@
+
 const { inject } = require("powercord/injector");
 const { open: openModal } = require("powercord/modal");
 const {
-  Icons: { Keyboard },
+  Icons: { Keyboard, Pin },
   Tooltip,
 } = require("powercord/components");
-const {
-  React,
-  Flux,
-  getModuleByDisplayName,
-  getModule,
-  constants: { Routes },
-} = require("powercord/webpack");
+const { React, getModuleByDisplayName, getModule } = require("powercord/webpack");
 
 const FavoriteFriends = require("../components/FavoriteFriends");
 const InformationModal = require("../components/InformationModal");
 const helper = require("../utils/helper");
+const Channel = require("../components/Channel");
 
 /*
  * [ Friend DM Channel ]
@@ -27,12 +23,7 @@ module.exports = async function () {
   const ConnectedPrivateChannelsList = await helper.getDefaultModule(
     "ConnectedPrivateChannelsList"
   );
-  const dms = await getModule(["openPrivateChannel"]);
-  const transition = await getModule(["transitionTo"]);
-  const userStore = await getModule(["getUser", "getCurrentUser"]);
   const channelStore = await getModule(["getChannel", "getDMFromUserId"]);
-  const activityStore = await getModule(["getPrimaryActivity"]);
-  const statusStore = await getModule(["getStatus"]);
   const classes = {
     ...(await getModule(["channel", "closeButton"])),
     ...(await getModule(["avatar", "muted", "selected"])),
@@ -49,118 +40,49 @@ module.exports = async function () {
     PrivateChannel.prototype,
     "render",
     function (args, res) {
-      if (this.props.isBetterFriends) {
-        res.props.children = this.props.infoModal
-          ? React.createElement(
-              Tooltip,
-              {
-                text: "User Information",
-                position: "top",
+      if (Object.values(settingsMgr.get("dmCategories")).some(cat => cat.dms.includes(this.props.user?.id))) {
+        if (!settingsMgr.get('infomodal')) return res;
+        if (!res.props.className.includes('pd-pinChannel')) res.props.className += ' pd-pinChannel';
+        res.props.children.props.onClick = () => {};
+			  res.props.children = [
+          React.createElement(
+            Tooltip,
+            { text: 'User information', position: 'top' },
+            React.createElement(Keyboard, {
+              className: 'pd-information',
+              onClick: e => {
+                e.stopPropagation();
+                e.preventDefault();
+                const info = _this.FRIEND_DATA.lastMessageID[this.props.user.id];
+                openModal(() =>
+                  React.createElement(InformationModal, {
+                    user: { ...this.props.user, isSystemUser: () => false, isSystemDM: () => false },
+                    channel: !info ? 'nothing' : info.channel,
+                    message: !info ? 'nothing' : info.id,
+                  })
+                );
               },
-              React.createElement(Keyboard, {
-                className: "pd-information",
-                onClick: (e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  const info =
-                    _this.FRIEND_DATA.lastMessageID[this.props.user.id];
-                  openModal(() =>
-                    React.createElement(InformationModal, {
-                      user: {
-                        ...this.props.user,
-                        isSystemUser: () => false,
-                        isSystemDM: () => false,
-                      },
-                      channel: !info ? "nothing" : info.channel,
-                      message: !info ? "nothing" : info.id,
-                    })
-                  );
-                },
-              })
-            )
-          : React.createElement("p");
-
-        if (this.props.channel.id === "0" && res.props.children) {
-          res.props.onMouseDown = () => void 0;
-          res.props.children = React.createElement(
-            "a",
-            null,
-            res.props.children.props.children
-          );
-          res.props.onClick = async () => {
-            const channelId = await dms.openPrivateChannel(
-              userStore.getCurrentUser().id,
-              this.props.user.id
-            );
-            // eslint-disable-next-line new-cap
-            transition.transitionTo(Routes.CHANNEL("@me", channelId));
-            if (_this.favFriendsInstance)
-              _this.favFriendsInstance.forceUpdate();
-          };
-        }
-      }
+            })
+          ),
+          res.props.children,
+        ];
+      } else if (!Object.values(settingsMgr.get("dmCategories")).some(cat => cat.dms.includes(this.props.channel?.id)))
+        res.props.children = [
+          React.createElement(
+            Tooltip,
+            { text: 'Pin', position: 'top', className: 'pd-pin' },
+            React.createElement(Pin, {
+              className: 'pd-pin',
+              onClick: () => {
+                //do shit
+              },
+            })
+          ),
+          res.props.children,
+        ];
       return res;
     }
   );
-
-  // Build connected component
-  const ConnectedPrivateChannel = Flux.connectStores(
-    [
-      userStore,
-      channelStore,
-      activityStore,
-      statusStore,
-      powercord.api.settings.store,
-    ],
-    ({ userId, selectedChannelId }) => {
-      const entity = userStore.getUser(userId) ||
-        channelStore.getChannel(userId) || {
-          id: "0",
-          username: "???",
-          isSystemUser: () => false,
-          getAvatarURL: () => null,
-          isSystemDM: () => false,
-        };
-
-      let obj = {
-        channel: undefined,
-        channelName: "",
-        infoModal: powercord.api.settings.store.getSetting(
-          "pindms",
-          "infomodal"
-        ),
-        isBetterFriends: true,
-      };
-      if (entity.type === 3) {
-        obj.channel = entity;
-        obj.selected = selectedChannelId === userId;
-        obj.channelName = entity.name.length
-          ? entity.name
-          : entity.rawRecipients.map((r) => r.username).join(", ");
-      } else {
-        const channelId = channelStore.getDMFromUserId(userId);
-        obj.user = entity;
-        obj.selected = selectedChannelId === channelId;
-        obj.channel = channelId
-          ? channelStore.getChannel(channelId)
-          : {
-              id: "0",
-              type: 1,
-              isMultiUserDM: () => false,
-              isSystemUser: () => false,
-              isSystemDM: () => false,
-              recipients: [entity.id],
-              toString: () => user.username,
-            };
-        obj.channelName = entity.username;
-        obj.isMobile = statusStore.isMobileOnline(userId);
-        obj.status = statusStore.getStatus(userId);
-        obj.activities = activityStore.getActivities(userId);
-      }
-
-      return obj;
-    }
-  )(PrivateChannel);
 
   // Patch DM list
   inject(
@@ -215,41 +137,31 @@ module.exports = async function () {
                 classes,
                 category,
                 count: category.dms.length,
-                settingsMgr,
+                settingsMgr
               })
             );
           }
         }
       }
 
-      res.props.children = [
-        // Previous elements
-        ...res.props.children,
-      ];
-      this.categoriesInstances.forEach((instance) => {
+      res.props.children = [...res.props.children];
+
+      this.categoriesInstances.forEach(instance => {
         const category = instance.props.category;
         instance.props.key = `pd-${category.id}`;
-
-        res.props.children.push(() => instance);
-
-        if (settingsMgr.get(`dmCategories.${category.id}.collapse`)) {
-          const dms = category.dms
-            .sort((a, b) => {
-              return (
-                lastMessageId(getDMFromUserId(b)) -
-                lastMessageId(getDMFromUserId(a))
-              );
-            })
-            .map((userId) => () => {
-              return React.createElement(ConnectedPrivateChannel, {
-                userId: userId,
-                key: `${userId}`,
-                selectedChannelId: res.props.selectedChannelId,
-              });
-            });
-
-          res.props.children.push(dms);
-        }
+  
+        const dms = category.dms
+          .sort((a, b) => lastMessageId(getDMFromUserId(b)) - lastMessageId(getDMFromUserId(a)))
+          .map(
+            userId => () =>
+              settingsMgr.get(`dmCategories.${category.id}.collapse`, false) &&
+              React.createElement(Channel, {
+                channelId: getDMFromUserId(userId) || userId,
+                selected: (getDMFromUserId(userId) || userId) === res.props.selectedChannelId,
+              })
+          );
+  
+        res.props.children.push(() => instance, dms);
       });
 
       res.props.children = res.props.children.flat(1);
@@ -260,6 +172,5 @@ module.exports = async function () {
 
   helper.forceUpdateElement("#private-channels");
 
-  ConnectedPrivateChannelsList.default.displayName =
-    "ConnectedPrivateChannelsList";
+  ConnectedPrivateChannelsList.default.displayName = "ConnectedPrivateChannelsList";
 };

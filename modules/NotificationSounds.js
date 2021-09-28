@@ -14,7 +14,7 @@ module.exports = async function () {
   ]);
 
   const custom = this.settings.get("notifsounds", {});
-  const isFavoriteFriend = (id) => this.FAV_FRIENDS.includes(id);
+  const isPinned = (id) => Object.values(this.settings.get("dmCategories")).some(cat => cat.dms.includes(id));
 
   const AUDIO = Object.keys(custom).map((s) => {
     const sound = custom[s];
@@ -60,7 +60,7 @@ module.exports = async function () {
       const self = getCurrentUser();
       const message = args[1];
       if (self.id !== message.author.id) {
-        if (isFavoriteFriend(message.author.id) && custom["message1"]) {
+        if (isPinned(message.author.id) && custom["message1"]) {
           this.log("Playing custom sound for favorited friend");
           doPlayCustomSound = true;
         }

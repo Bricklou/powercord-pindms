@@ -20,13 +20,10 @@ module.exports = async function () {
       "_renderTypingElement",
       (args, res) => {
         if (
-          this.FAV_FRIENDS.some((fr) =>
-            Object.keys(typingStore.getTypingUsers(args[0].id)).includes(fr)
+          Object.values(this.settings.get("dmCategories")).some((cat) =>
+            cat.dms.some(dm => Object.keys(typingStore.getTypingUsers(args[0].channel.id)).includes(dm))
           )
-        ) {
-          res.props.style.filter =
-            "sepia(300%) hue-rotate(313deg) saturate(1600%)";
-        }
+        ) res.props.children.props.style.filter = "sepia(300%) hue-rotate(313deg) saturate(1600%)";
         return res;
       }
     );

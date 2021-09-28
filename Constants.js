@@ -35,6 +35,7 @@ module.exports = {
     ChannelTypingIntegration: ["pd-ct-integration"],
     SpotifyIntegration: ["pd-spotify-integration", "pd-spotify-integration2"],
     NotificationSounds: ["pd-notification", "pd-playSound"],
+    FriendsList: ['pd-friendslist-tabbar', 'pd-friendslist-row', 'pd-friendslist'],
   },
   Sounds: {
     message1: "Message",

@@ -1,6 +1,7 @@
 const { React } = require("powercord/webpack");
 const { getModule, getModuleByDisplayName } = require("powercord/webpack");
-const { SwitchItem, TextInput } = require("powercord/components/settings");
+const { SwitchItem, TextInput, Category } = require("powercord/components/settings");
+const { Button } = require('powercord/components')
 const { Sounds } = require("./Constants");
 
 module.exports = class Settings extends React.Component {
@@ -8,171 +9,34 @@ module.exports = class Settings extends React.Component {
     super(props);
 
     const get = props.getSetting;
-    this.plugin = powercord.pluginManager.get("pindms");
+    this.plugin = powercord.pluginManager.get("powercord-pindms");
 
     this.state = {
-      friendsQuery: "",
-      favfriends: get("favfriends", []),
       notifsounds: get("notifsounds", {}),
       infomodal: get("infomodal", true),
-      displaystar: get("displaystar", true),
-      statuspopup: get("statuspopup", true),
+      sortoptions: get('sortoptions', true),
+			mutualguilds: get('mutualguilds', true),
+			showtotal: get('showtotal', true),
+      opened: false
     };
   }
 
   async componentDidMount() {
     this.setState({
-      VerticalScroller: (await getModule(["AdvancedScrollerThin"]))
-        .AdvancedScrollerThin,
-      Flex: await getModuleByDisplayName("Flex"),
       Text: await getModuleByDisplayName("Text"),
-      PopoutList: await getModuleByDisplayName("PopoutList"),
       playSound: (await getModule(["playSound"])).playSound,
-      getUser: (await getModule(["getUser", "getUsers"])).getUser,
-      getRelationships: (await getModule(["getRelationships"]))
-        .getRelationships,
     });
   }
 
   render() {
-    if (!this.state.VerticalScroller) {
+    if (!this.state.Text) {
       return null;
     }
-    const {
-      VerticalScroller,
-      Flex,
-      Text,
-      PopoutList,
-      playSound,
-      getUser,
-      getRelationships,
-    } = this.state;
-    const PopoutListSearchBar = PopoutList.prototype.constructor.SearchBar;
-    const PopoutListDivider = PopoutList.prototype.constructor.Divider;
-    const FlexChild = Flex.prototype.constructor.Child;
-    const SelectableItem = PopoutList.prototype.constructor.Item;
+    const { Text, playSound } = this.state;
 
-    const relationships = getRelationships();
-    const friends = Object.keys(relationships).filter(
-      (relation) => relationships[relation] === 1
-    );
+    const dmCategories = Object.values(this.props.getSetting('dmCategories'));
     return (
       <div>
-        <h5 className="h5-18_1nd title-3sZWYQ size12-3R0845 height16-2Lv3qA weightSemiBold-NJexzi marginBottom8-AtZOdT">
-          Manage favorited friends
-        </h5>
-        <div className="description-3_Ncsb formText-3fs7AJ marginBottom20-32qID7 modeDefault-3a2Ph1 primary-jw0I4K">
-          You can add or remove favorited friends from your friends list here.
-        </div>
-        <PopoutList
-          className="pd-user-settings guildSettingsAuditLogsUserFilterPopout-3Jg5NE pc-guildSettingsAuditLogsUserFilterPopout elevationBorderHigh-2WYJ09 pc-elevationBorderHigh"
-          popoutKey="pd-users"
-        >
-          <PopoutListSearchBar
-            autoFocus={true}
-            placeholder="Search friends"
-            query={this.state.friendsQuery || ""}
-            onChange={(e) => this.setState({ friendsQuery: e })}
-            onClear={() => this.setState({ friendsQuery: "" })}
-          />
-          <PopoutListDivider />
-          <VerticalScroller className="scroller-2CvAgC pc-scroller">
-            {friends
-              .map(getUser)
-              .filter((user) =>
-                this.state.friendsQuery
-                  ? user.username
-                      .toLowerCase()
-                      .includes(this.state.friendsQuery.toLowerCase())
-                  : true
-              )
-              .map((user, i) => (
-                <SelectableItem
-                  className="pd-friend-item"
-                  id={user.id}
-                  key={i.toString()}
-                  selected={this.state.favfriends.includes(user.id)}
-                  onClick={(e) => {
-                    if (!e.selected) {
-                      this.state.favfriends.push(e.id);
-                      this._set("favfriends", this.state.favfriends);
-                    } else {
-                      this._set(
-                        "favfriends",
-                        this.state.favfriends.filter((a) => a !== e.id)
-                      );
-                    }
-                    this.plugin.reload();
-                  }}
-                >
-                  <Flex
-                    align="alignCenter-1dQNNs"
-                    basis="auto"
-                    grow={1}
-                    shrink={1}
-                  >
-                    <div>
-                      <Flex
-                        align="alignCenter-1dQNNs"
-                        basis="auto"
-                        grow={1}
-                        shrink={1}
-                      >
-                        <FlexChild
-                          key="avatar"
-                          basis="auto"
-                          grow={0}
-                          shrink={0}
-                          wrap={false}
-                        >
-                          <img
-                            src={
-                              !user.avatar
-                                ? `https://cdn.discordapp.com/embed/avatars/${
-                                    user.discriminator % 5
-                                  }.png`
-                                : `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-                            }
-                            width={32}
-                            height={32}
-                            style={{ borderRadius: "360px" }}
-                          />
-                        </FlexChild>
-                        <FlexChild
-                          key="user-text"
-                          basis="auto"
-                          grow={1}
-                          shrink={1}
-                          wrap={false}
-                        >
-                          <div className="userText-1WDPps">
-                            <span className="userText-1WDPps">
-                              {user.username}
-                            </span>
-                            <span className="discriminator-3tYCOD">
-                              #{user.discriminator}
-                            </span>
-                          </div>
-                        </FlexChild>
-                      </Flex>
-                    </div>
-                  </Flex>
-                </SelectableItem>
-              ))
-              .sort((a, b) => {
-                const firstName =
-                  a.props.children.props.children.props.children.props
-                    .children[1].props.children.props.children[0].props
-                    .children;
-                const secondName =
-                  b.props.children.props.children.props.children.props
-                    .children[1].props.children.props.children[0].props
-                    .children;
-                return firstName.localeCompare(secondName);
-              })}
-          </VerticalScroller>
-        </PopoutList>
-
         <SwitchItem
           note="Toggles the functionality of the information button within the DM list on favorited friends"
           style={{ marginTop: "16px" }}
@@ -186,25 +50,37 @@ module.exports = class Settings extends React.Component {
         </SwitchItem>
 
         <SwitchItem
-          value={this.state.displaystar}
-          onChange={() => {
-            this._set("displaystar");
-            this.plugin.reload("DisplayStar");
-          }}
-        >
-          Display star next to favorited friends
-        </SwitchItem>
+					note='Have sort options in the friend list'
+					value={this.state.sortoptions}
+					onChange={() => {
+						this._set('sortoptions');
+						this.plugin.reload("FriendsList");
+					}}
+				>
+					Show sort options
+				</SwitchItem>
 
-        <SwitchItem
-          note="Receive notifications in the bottom right-hand corner whenever a favorited friend changes their status"
-          value={this.state.statuspopup}
+				<SwitchItem
+					note='Show mutual guilds in the friend list'
+					value={this.state.mutualguilds}
+					onChange={() => {
+						this._set('mutualguilds');
+						this.plugin.reload("FriendsList");
+					}}
+				>
+					Show mutual guilds
+				</SwitchItem>
+
+				<SwitchItem
+					note='Show total amount for all/requested/blocked'
+					value={this.state.showtotal}
           onChange={() => {
-            this._set("statuspopup");
-            this.plugin.reload();
-          }}
-        >
-          Show status notifications
-        </SwitchItem>
+						this._set('showtotal');
+						this.plugin.reload("FriendsList");
+					}}
+				>
+					Show total amount for all/requested/blocked
+				</SwitchItem>
 
         <h5 className="h5-18_1nd title-3sZWYQ size12-3R0845 height16-2Lv3qA weightSemiBold-NJexzi marginBottom8-AtZOdT marginTop40-i-78cZ">
           Notification Sounds
@@ -237,7 +113,7 @@ module.exports = class Settings extends React.Component {
               <div style={{ float: "right", paddingLeft: "16px" }}>
                 <TextInput
                   onChange={(value) => {
-                    this.state.notifsounds[sound] = { url: value, volume: 0.4 };
+                    this.state.notifsounds[sound] = { url: value, volume: 0.6 };
                     this._set("notifsounds", this.state.notifsounds);
                   }}
                   className="pd-textarea-notifsounds"
@@ -253,6 +129,16 @@ module.exports = class Settings extends React.Component {
             </div>
           </div>
         ))}
+        <Category name='Pinned Categories' opened={this.state.opened} onChange={() => this.setState({ opened: !this.state.opened })}>
+					{dmCategories.map(c => (
+						<div className='pd-setting-category'>
+							<TextInput defaultValue={c.name} placeholder='category name' />
+              <Button color={Button.Colors.RED}>Remove</Button>
+              <Button color={Button.Colors.BRAND} size={Button.Sizes.LARGE} disabled>Category color</Button>
+						</div>
+					))}
+          <Button color={Button.Colors.BRAND}>Add</Button>
+				</Category>
       </div>
     );
   }
