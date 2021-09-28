@@ -57,6 +57,7 @@ module.exports = async function () {
           React.createElement(MenuItem, {
             label: "Add to new Category",
             id: "pd-new-channellist",
+            color: "colorBrand",
             action: () => {
               contextAction.addToNewCategoryModal(settingsMgr, id, () =>
                 helper.forceUpdateElement("#private-channels")
@@ -80,6 +81,7 @@ module.exports = async function () {
           React.createElement(MenuItem, {
             id: "pd-remove",
             label: "Unpin from the category",
+            color: "colorDanger",
             action: () => {
               if (!currentCategory && !currentCategory.id) return;
               let dms = settingsMgr.get(
