@@ -110,6 +110,8 @@ module.exports = async function () {
       const dmsCategories = settingsMgr.get("dmCategories");
       const idList = [];
 
+      const preCategories = settingsMgr.get("preCategories", {});
+
       for (const [_, categories] of Object.entries(dmsCategories)) {
         idList.push(...categories.dms);
       }
@@ -149,14 +151,18 @@ module.exports = async function () {
           }
         } else {
           if (category && category.dms.length) {
-            this.categoriesInstances.push(
-              React.createElement(FavoriteFriends, {
-                classes,
-                category,
-                count: category.dms.length,
-                settingsMgr,
-              })
-            );
+            const el = React.createElement(FavoriteFriends, {
+              classes,
+              category,
+              count: category.dms.length,
+              settingsMgr,
+            });
+
+            if (["groups", "friends", "blocked"].includes(category.id)) {
+              this.categoriesInstances.unshift(el);
+            } else {
+              this.categoriesInstances.push(el);
+            }
           }
         }
       }

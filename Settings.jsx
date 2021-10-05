@@ -214,26 +214,36 @@ module.exports = class Settings extends React.Component {
             </SwitchItem>
           </FormItem>
 
-          {dmCategories.map((c) => (
-            <div className="pd-setting-category">
-              <div>
-                <TextInput defaultValue={c.name} placeholder="category name" />
-                <Button color={Button.Colors.RED} onClick={() => {}}>
-                  Remove
-                </Button>
+          {dmCategories.map((c) => {
+            const isPredefined = ["friends", "groups", "blocked"].includes(
+              c.id
+            );
+            return (
+              <div className="pd-setting-category">
+                <div>
+                  <TextInput
+                    defaultValue={c.name}
+                    placeholder="category name"
+                    disabled={isPredefined}
+                    title={isPredefined ? "Predefined category" : ""}
+                  />
+                  <Button color={Button.Colors.RED} onClick={() => {}}>
+                    Remove
+                  </Button>
+                </div>
+                <div>
+                  <ColorPickerInput
+                    value="#f00"
+                    onChange={(value) => {
+                      this._set(`dmCategories.${c.id}.color`, value);
+                    }}
+                  >
+                    Color
+                  </ColorPickerInput>
+                </div>
               </div>
-              <div>
-                <ColorPickerInput
-                  value="#f00"
-                  onChange={(value) => {
-                    this._set(`dmCategories.${c.id}.color`, value);
-                  }}
-                >
-                  Color
-                </ColorPickerInput>
-              </div>
-            </div>
-          ))}
+            );
+          })}
           <Button color={Button.Colors.BRAND}>Add</Button>
         </Category>
       </div>

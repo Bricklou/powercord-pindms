@@ -29,10 +29,29 @@ module.exports = class PinDMs extends Plugin {
         channelList: false,
         guildList: false,
       },
-      dmCategories: {},
+      dmCategories: {
+        friends: {
+          id: "friends",
+          name: "Friends",
+          pos: 0,
+          dms: [],
+        },
+        blocked: {
+          id: "blocked",
+          name: "Blocked",
+          pos: 1,
+          dms: [],
+        },
+        groups: {
+          id: "groups",
+          name: "Groups",
+          pos: 2,
+          dms: [],
+        },
+      },
       preCategories: {
         friends: {
-          enabled: false,
+          enabled: true,
           collapsed: false,
         },
         blocked: {
@@ -40,7 +59,7 @@ module.exports = class PinDMs extends Plugin {
           collapsed: false,
         },
         groups: {
-          enabled: false,
+          enabled: true,
           collapsed: false,
         },
       },

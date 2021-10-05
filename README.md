@@ -10,10 +10,10 @@ Allows you to pin DMs, making them appear at the top of your DMs/ServerList
     - [X] User DM context menu
     - [x] Group DM context menu
     - [x] Add color to menu item buttons
-- [ ] Channel List
+- [x] Channel List
     - [x] Categories
     - [x] Categories count (number of users/groups inside)
-    - [ ] Default categories
+    - [x] Default categories
     - [x] Collapse categories
 - [ ] Server List
     - [ ] Pin/Unpin DMs in servers list
