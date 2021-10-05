@@ -12,10 +12,12 @@ module.exports = class PinDMs extends Plugin {
     // Default settings handler
     this.DEFAULT_SETTINGS = {
       notifsounds: {},
-      infomodal: true,
-      sortoptions: true,
-      mutualguilds: true,
-      showtotal: true,
+      friendList: {
+        infomodal: true,
+        sortoptions: true,
+        mutualguilds: true,
+        showtotal: true,
+      },
 
       // Updated settings
       general: {

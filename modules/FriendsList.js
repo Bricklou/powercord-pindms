@@ -14,6 +14,8 @@ module.exports = async function () {
   this.sortReversed = false;
   this.searchQuery = "";
 
+  const settingsMgr = require("../utils/settingsMgr")(this.settings);
+
   const _injectTabBar = async () => {
     const TabBar = (await getModuleByDisplayName("TabBar")).prototype;
     const { getRelationships } = await getModule(["getRelationships"]);
@@ -164,7 +166,7 @@ module.exports = async function () {
                 section = section.map((user) => {
                   user.statusIndex = statusSortOrder[user.props.status];
                   user.isPinned = Object.values(
-                    this.settings.get("dmCategories")
+                    settingsMgr.get("dmCategories")
                   ).some((cat) => cat.dms.includes(user.key));
                   return user;
                 });
@@ -199,7 +201,7 @@ module.exports = async function () {
       "PeopleListSectionedNonLazy";
   };
 
-  this.settings.get("sortoptions", true) && _injectPeopleList();
-  this.settings.get("showtotal", true) && _injectTabBar();
-  this.settings.get("mutualguilds", true) && _injectFriendRow();
+  settingsMgr.get("friendList.sortoptions", true) && _injectPeopleList();
+  settingsMgr.get("friendList.showtotal", true) && _injectTabBar();
+  settingsMgr.get("friendList.mutualguilds", true) && _injectFriendRow();
 };
