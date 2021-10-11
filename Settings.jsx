@@ -37,6 +37,7 @@ module.exports = class Settings extends React.Component {
     this.setState({
       Text: await getModuleByDisplayName("Text"),
       playSound: (await getModule(["playSound"])).playSound,
+      ColorUtils: await getModule(["isValidHex"]),
     });
   }
 
@@ -44,7 +45,7 @@ module.exports = class Settings extends React.Component {
     if (!this.state.Text) {
       return null;
     }
-    const { Text, playSound } = this.state;
+    const { Text, playSound, ColorUtils } = this.state;
 
     const dmCategories = Object.values(this.props.getSetting("dmCategories"));
     return (
@@ -218,6 +219,7 @@ module.exports = class Settings extends React.Component {
             const isPredefined = ["friends", "groups", "blocked"].includes(
               c.id
             );
+            const col = c.color ? ColorUtils.hex2int(c.color) : "";
             return (
               <div className="pd-setting-category">
                 <div>
@@ -233,9 +235,12 @@ module.exports = class Settings extends React.Component {
                 </div>
                 <div>
                   <ColorPickerInput
-                    value="#f00"
+                    customColor={() => col}
+                    value={col}
                     onChange={(value) => {
-                      this._set(`dmCategories.${c.id}.color`, value);
+                      const color = ColorUtils.int2hex(value);
+                      this._set(`dmCategories.${c.id}.color`, color);
+                      this.plugin.reload("CategoryChannel");
                     }}
                   >
                     Color

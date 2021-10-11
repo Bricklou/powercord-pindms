@@ -84,7 +84,7 @@ module.exports = async function () {
           groupList.push(
             React.createElement(MenuItem, {
               label: "Add to Groups list",
-              id: "pd-add-blocked-list",
+              id: "pd-add-groups-list",
               action: () => {
                 settingsMgr.push(`dmCategories.groups.dms`, id, true);
                 helper.forceUpdateElement("#private-channels");

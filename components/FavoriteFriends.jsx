@@ -33,7 +33,12 @@ module.exports = class FavoriteFriends extends React.PureComponent {
           helper.forceUpdateElement("#private-channels");
         }}
       >
-        <span className={classes.headerText}>{category.name}</span>
+        <span
+          className={classes.headerText}
+          style={{ color: category.color ?? "" }}
+        >
+          {category.name}
+        </span>
         <NumberBadge
           count={count}
           style={{ backgroundColor: "rgb(var(--accentcolor))", width: "16px" }}

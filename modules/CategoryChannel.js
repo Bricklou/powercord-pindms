@@ -26,7 +26,7 @@ module.exports = async function () {
   const ConnectedPrivateChannelsList = await helper.getDefaultModule(
     "ConnectedPrivateChannelsList"
   );
-  const channelStore = await getModule(["getChannel", "getDMFromUserId"]);
+  const channelStore = await getModule(["getChannel"]);
   const classes = {
     ...(await getModule(["channel", "closeButton"])),
     ...(await getModule(["avatar", "muted", "selected"])),
@@ -109,8 +109,6 @@ module.exports = async function () {
     (args, res) => {
       const dmsCategories = settingsMgr.get("dmCategories");
       const idList = [];
-
-      const preCategories = settingsMgr.get("preCategories", {});
 
       for (const [_, categories] of Object.entries(dmsCategories)) {
         idList.push(...categories.dms);

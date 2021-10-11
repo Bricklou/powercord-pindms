@@ -40,6 +40,7 @@ module.exports = {
       "pd-friendslist-row",
       "pd-friendslist",
     ],
+    PinnedGuild: ["pd-pinned-guild-list"],
   },
   Sounds: {
     message1: "Message",

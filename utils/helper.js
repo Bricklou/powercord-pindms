@@ -28,4 +28,15 @@ module.exports = {
     el.dispatchEvent(new Event("focusin"));
     el.dispatchEvent(new Event("focusout"));
   },
+
+  _getDefaultMethodByKeyword(mdl, keyword) {
+    const defaultMethod = mdl.__powercordOriginal_default ?? mdl.default;
+    return typeof defaultMethod === "function"
+      ? defaultMethod.toString().includes(keyword)
+      : null;
+  },
+
+  async getDefaultModuleMethodByKeyword(keyword) {
+    return await getModule((m) => this._getDefaultMethodByKeyword(m, keyword));
+  },
 };

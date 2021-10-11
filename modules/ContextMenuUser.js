@@ -68,6 +68,7 @@ module.exports = async function () {
 
         if (gListSetting && typeof gListSetting === "object") {
           for (const [_key, item] of Object.entries(gListSetting)) {
+            if (["friends", "blocked", "groups"].includes(item.id)) continue;
             groupList.push(
               React.createElement(MenuItem, {
                 label: item.name,
@@ -111,7 +112,7 @@ module.exports = async function () {
           groupList.push(
             React.createElement(MenuItem, {
               label: "Add to Groups list",
-              id: "pd-add-blocked-list",
+              id: "pd-add-groups-list",
               action: () => {
                 settingsMgr.push(`dmCategories.groups.dms`, id, true);
                 helper.forceUpdateElement("#private-channels");
@@ -141,7 +142,14 @@ module.exports = async function () {
               label: "Pin to channel list",
             },
             groupList
-          )
+          ),
+          React.createElement(MenuItem, {
+            id: "pd-add-sever",
+            label: "Pin to server list",
+            action: () => {
+              contextAction.addToServerList(settingsMgr, id, () => {});
+            },
+          })
         );
       } else {
         group.push(
