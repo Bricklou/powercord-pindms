@@ -54,45 +54,6 @@ module.exports = async function () {
           }
         }
 
-        if (settingsMgr.get("preCategories.friends.enabled", false)) {
-          groupList.push(
-            React.createElement(MenuItem, {
-              label: "Add to Friend list",
-              id: "pd-add-friend-list",
-              action: () => {
-                settingsMgr.push(`dmCategories.friends.dms`, id, true);
-                helper.forceUpdateElement("#private-channels");
-              },
-            })
-          );
-        }
-
-        if (settingsMgr.get("preCategories.blocked.enabled", false)) {
-          groupList.push(
-            React.createElement(MenuItem, {
-              label: "Add to Blocked list",
-              id: "pd-add-blocked-list",
-              action: () => {
-                settingsMgr.push(`dmCategories.blocked.dms`, id, true);
-                helper.forceUpdateElement("#private-channels");
-              },
-            })
-          );
-        }
-
-        if (settingsMgr.get("preCategories.groups.enabled", false)) {
-          groupList.push(
-            React.createElement(MenuItem, {
-              label: "Add to Groups list",
-              id: "pd-add-groups-list",
-              action: () => {
-                settingsMgr.push(`dmCategories.groups.dms`, id, true);
-                helper.forceUpdateElement("#private-channels");
-              },
-            })
-          );
-        }
-
         groupList.push(
           React.createElement(MenuItem, {
             label: "Add to new Category",
@@ -110,12 +71,23 @@ module.exports = async function () {
           React.createElement(
             MenuItem,
             {
-              id: "pd-add",
-              label: "Pin to channel list",
+              id: "pd-main-item",
+              label: "PinDMs",
             },
-            groupList
+            [
+              React.createElement(
+                MenuItem,
+                {
+                  id: "pd-add",
+                  label: "Pin to channel list",
+                },
+                groupList
+              ),
+            ]
           )
         );
+
+        group.push();
       } else {
         group.push(
           React.createElement(MenuItem, {

@@ -28,8 +28,6 @@ module.exports = class Settings extends React.Component {
         notificationSound: false,
         pinCategories: false,
       },
-
-      preCategories: get("preCategories", {}),
     };
   }
 
@@ -183,42 +181,7 @@ module.exports = class Settings extends React.Component {
             })
           }
         >
-          <FormItem title="Predefined Categories" required={false}>
-            <SwitchItem
-              value={this.state.preCategories.friends.enabled}
-              onChange={(value) => {
-                this._set(`preCategories.friends.enabled`, value);
-                this.plugin.reload("CategoryChannel");
-              }}
-            >
-              Enable "Friends" category
-            </SwitchItem>
-
-            <SwitchItem
-              value={this.state.preCategories.blocked.enabled}
-              onChange={(value) => {
-                this._set(`preCategories.blocked.enabled`, value);
-                this.plugin.reload("CategoryChannel");
-              }}
-            >
-              Enable "Blocked" category
-            </SwitchItem>
-
-            <SwitchItem
-              value={this.state.preCategories.groups.enabled}
-              onChange={(value) => {
-                this._set(`preCategories.groups.enabled`, value);
-                this.plugin.reload("CategoryChannel");
-              }}
-            >
-              Enable "Groups" category
-            </SwitchItem>
-          </FormItem>
-
           {dmCategories.map((c) => {
-            const isPredefined = ["friends", "groups", "blocked"].includes(
-              c.id
-            );
             const col = c.color ? ColorUtils.hex2int(c.color) : "";
             return (
               <div className="pd-setting-category">
@@ -226,8 +189,6 @@ module.exports = class Settings extends React.Component {
                   <TextInput
                     defaultValue={c.name}
                     placeholder="category name"
-                    disabled={isPredefined}
-                    title={isPredefined ? "Predefined category" : ""}
                   />
                   <Button color={Button.Colors.RED} onClick={() => {}}>
                     Remove

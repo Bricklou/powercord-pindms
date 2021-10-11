@@ -156,11 +156,7 @@ module.exports = async function () {
               settingsMgr,
             });
 
-            if (["groups", "friends", "blocked"].includes(category.id)) {
-              this.categoriesInstances.unshift(el);
-            } else {
-              this.categoriesInstances.push(el);
-            }
+            this.categoriesInstances.push(el);
           }
         }
       }

@@ -30,37 +30,11 @@ module.exports = class PinDMs extends Plugin {
         guildList: false,
       },
       dmCategories: {
-        friends: {
-          id: "friends",
-          name: "Friends",
+        "00000000000000000": {
+          id: "00000000000000000",
+          name: "Example",
           pos: 0,
           dms: [],
-        },
-        blocked: {
-          id: "blocked",
-          name: "Blocked",
-          pos: 1,
-          dms: [],
-        },
-        groups: {
-          id: "groups",
-          name: "Groups",
-          pos: 2,
-          dms: [],
-        },
-      },
-      preCategories: {
-        friends: {
-          enabled: true,
-          collapsed: false,
-        },
-        blocked: {
-          enabled: false,
-          collapsed: false,
-        },
-        groups: {
-          enabled: true,
-          collapsed: false,
         },
       },
     };
