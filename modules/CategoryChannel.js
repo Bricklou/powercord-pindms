@@ -169,7 +169,7 @@ module.exports = async function () {
 
         res.props.children.push(() => instance);
 
-        if (settingsMgr.get(`pindms.dmCategories.${category.id}.collapse`)) {
+        if (settingsMgr.get(`pindms.dmCategories.${category.id}.expanded`)) {
           const dms = category.dms
             .sort(
               (a, b) =>

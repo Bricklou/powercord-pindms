@@ -45,7 +45,9 @@ module.exports = class Settings extends React.Component {
     }
     const { Text, playSound, ColorUtils } = this.state;
 
-    const dmCategories = Object.values(this.props.getSetting("dmCategories"));
+    const dmCategories = Object.values(
+      this.props.getSetting("pindms.dmCategories")
+    );
     return (
       <div>
         <Category
@@ -196,8 +198,8 @@ module.exports = class Settings extends React.Component {
                 </div>
                 <div>
                   <ColorPickerInput
-                    customColor={() => col}
-                    value={col}
+                    customColor={col}
+                    value={ColorUtils.hex2int("transparent")}
                     onChange={(value) => {
                       const color = ColorUtils.int2hex(value);
                       this._set(`dmCategories.${c.id}.color`, color);

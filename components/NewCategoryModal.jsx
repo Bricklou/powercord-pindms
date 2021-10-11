@@ -57,7 +57,7 @@ module.exports = (settingsMgr, id, callback) => {
               onClick={() => {
                 const rndID = this.generateRandomId();
                 settingsMgr.set(`pindms.dmCategories.${rndID}`, {
-                  collapse: false,
+                  expanded: false,
                   dms: [id],
                   id: rndID,
                   name: this.state.name,

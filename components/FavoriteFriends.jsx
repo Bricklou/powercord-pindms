@@ -8,7 +8,7 @@ module.exports = class FavoriteFriends extends React.PureComponent {
     props.update = this.forceUpdate.bind(this);
 
     this.state = {
-      collapse: this.props.category.collapse ?? false,
+      expanded: this.props.category.expanded ?? true,
     };
   }
 
@@ -23,19 +23,19 @@ module.exports = class FavoriteFriends extends React.PureComponent {
       <h2
         className={`pd-pd-category-header ${classes.privateChannelsHeaderContainer} container-2ax-kl`}
         onClick={() => {
-          this.setState({
-            collapse: !this.state.collapse,
-          });
           settingsMgr.set(
-            `pindms.dmCategories.${category.id}.collapse`,
-            this.state.collapse
+            `pindms.dmCategories.${category.id}.expanded`,
+            !this.state.expanded
           );
           helper.forceUpdateElement("#private-channels");
+          this.setState({
+            expanded: !this.state.expanded,
+          });
         }}
       >
         <span
           className={classes.headerText}
-          style={{ color: category.color ?? "" }}
+          style={{ color: category.color ?? "var(--channels-default)" }}
         >
           {category.name}
         </span>
@@ -45,8 +45,8 @@ module.exports = class FavoriteFriends extends React.PureComponent {
         />
 
         <svg
-          className={`dm-category-collapse-icon ${
-            !this.state.collapse ? "expanded" : "collapsed"
+          className={`dm-category-expanded-icon ${
+            this.state.expanded ? "expanded" : "collapsed"
           }`}
           height={15}
           width={15}
