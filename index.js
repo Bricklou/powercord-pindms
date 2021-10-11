@@ -29,12 +29,14 @@ module.exports = class PinDMs extends Plugin {
         channelList: false,
         guildList: false,
       },
-      dmCategories: {
-        "00000000000000000": {
-          id: "00000000000000000",
-          name: "Example",
-          pos: 0,
-          dms: [],
+      pindms: {
+        dmCategories: {
+          "00000000000000000": {
+            id: "00000000000000000",
+            name: "Example",
+            pos: 0,
+            dms: [],
+          },
         },
       },
     };
@@ -58,7 +60,7 @@ module.exports = class PinDMs extends Plugin {
 
   async start() {
     this.instances = {};
-    if (!this.settings.get("dmCategories")) {
+    if (!this.settings.get("pindms.dmCategories")) {
       for (const setting of Object.keys(this.DEFAULT_SETTINGS)) {
         /* eslint-disable-line */ /* I know this is bad practice, hopefully I'll find a better solution soon */
         if (this.DEFAULT_SETTINGS[setting])

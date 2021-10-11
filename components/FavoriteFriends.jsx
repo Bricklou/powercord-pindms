@@ -27,7 +27,7 @@ module.exports = class FavoriteFriends extends React.PureComponent {
             collapse: !this.state.collapse,
           });
           settingsMgr.set(
-            `dmCategories.${category.id}.collapse`,
+            `pindms.dmCategories.${category.id}.collapse`,
             this.state.collapse
           );
           helper.forceUpdateElement("#private-channels");

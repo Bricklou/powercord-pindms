@@ -15,7 +15,7 @@ module.exports = async function () {
 
   const custom = this.settings.get("notifsounds", {});
   const isPinned = (id) =>
-    Object.values(this.settings.get("dmCategories")).some((cat) =>
+    Object.values(this.settings.get("pindms.dmCategories")).some((cat) =>
       cat.dms.includes(id)
     );
 

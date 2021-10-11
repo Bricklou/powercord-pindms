@@ -20,7 +20,7 @@ module.exports = (settingsMgr, id, callback) => {
     }
 
     generateRandomId() {
-      const keys = settingsMgr.getKeys("dmCategories");
+      const keys = settingsMgr.getKeys("pindms.dmCategories");
       const min = Math.pow(10, 16);
       const max = Math.pow(10, 17) - 1;
       const gen = () => Math.floor(Math.random() * (max - min) + min);
@@ -56,12 +56,12 @@ module.exports = (settingsMgr, id, callback) => {
               disabled={this.state.name == ""}
               onClick={() => {
                 const rndID = this.generateRandomId();
-                settingsMgr.set(`dmCategories.${rndID}`, {
+                settingsMgr.set(`pindms.dmCategories.${rndID}`, {
                   collapse: false,
                   dms: [id],
                   id: rndID,
                   name: this.state.name,
-                  pos: settingsMgr.getLength("dmCategories") || 0,
+                  pos: settingsMgr.getLength("pindms.dmCategories") || 0,
                 });
                 callback();
                 closeModal();

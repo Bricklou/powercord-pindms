@@ -166,7 +166,7 @@ module.exports = async function () {
                 section = section.map((user) => {
                   user.statusIndex = statusSortOrder[user.props.status];
                   user.isPinned = Object.values(
-                    settingsMgr.get("dmCategories")
+                    settingsMgr.get("pindms.dmCategories")
                   ).some((cat) => cat.dms.includes(user.key));
                   return user;
                 });

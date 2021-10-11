@@ -36,7 +36,7 @@ module.exports = async function () {
 
       if (!currentCategory) {
         const groupList = [];
-        const gListSetting = settingsMgr.get("dmCategories");
+        const gListSetting = settingsMgr.get("pindms.dmCategories");
 
         if (gListSetting && typeof gListSetting === "object") {
           for (const [_key, item] of Object.entries(gListSetting)) {
@@ -45,7 +45,11 @@ module.exports = async function () {
                 label: item.name,
                 id: `${item.id}`,
                 action: () => {
-                  settingsMgr.push(`dmCategories.${item.id}.dms`, id, true);
+                  settingsMgr.push(
+                    `pindms.dmCategories.${item.id}.dms`,
+                    id,
+                    true
+                  );
                   helper.forceUpdateElement("#private-channels");
                 },
               })
@@ -101,11 +105,14 @@ module.exports = async function () {
             action: () => {
               if (!currentCategory && !currentCategory.id) return;
               let dms = settingsMgr.get(
-                `dmCategories.${currentCategory.id}.dms`
+                `pindms.dmCategories.${currentCategory.id}.dms`
               );
               if (dms && Array.isArray(dms) && dms.includes(id)) {
                 dms = dms.filter((item) => item !== id);
-                settingsMgr.set(`dmCategories.${currentCategory.id}.dms`, dms);
+                settingsMgr.set(
+                  `pindms.dmCategories.${currentCategory.id}.dms`,
+                  dms
+                );
               }
               helper.forceUpdateElement("#private-channels");
             },

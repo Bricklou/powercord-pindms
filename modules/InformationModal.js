@@ -9,7 +9,7 @@ module.exports = async function () {
   function listener({ message }) {
     if (
       message &&
-      Object.values(_this.settings.get("dmCategories")).some((cat) =>
+      Object.values(_this.settings.get("pindms.dmCategories")).some((cat) =>
         cat.dms.includes(message.author.id)
       )
     ) {

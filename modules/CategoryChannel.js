@@ -44,7 +44,7 @@ module.exports = async function () {
     "render",
     function (args, res) {
       if (
-        Object.values(settingsMgr.get("dmCategories")).some((cat) =>
+        Object.values(settingsMgr.get("pindms.dmCategories")).some((cat) =>
           cat.dms.includes(this.props.user?.id)
         )
       ) {
@@ -80,7 +80,7 @@ module.exports = async function () {
           res.props.children,
         ];
       } else if (
-        !Object.values(settingsMgr.get("dmCategories")).some((cat) =>
+        !Object.values(settingsMgr.get("pindms.dmCategories")).some((cat) =>
           cat.dms.includes(this.props.channel?.id)
         )
       )
@@ -107,7 +107,7 @@ module.exports = async function () {
     ConnectedPrivateChannelsList,
     "default",
     (args, res) => {
-      const dmsCategories = settingsMgr.get("dmCategories");
+      const dmsCategories = settingsMgr.get("pindms.dmCategories");
       const idList = [];
 
       for (const [_, categories] of Object.entries(dmsCategories)) {
@@ -169,7 +169,7 @@ module.exports = async function () {
 
         res.props.children.push(() => instance);
 
-        if (settingsMgr.get(`dmCategories.${category.id}.collapse`)) {
+        if (settingsMgr.get(`pindms.dmCategories.${category.id}.collapse`)) {
           const dms = category.dms
             .sort(
               (a, b) =>
