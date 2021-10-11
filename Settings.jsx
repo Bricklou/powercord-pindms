@@ -202,7 +202,7 @@ module.exports = class Settings extends React.Component {
                     value={ColorUtils.hex2int("transparent")}
                     onChange={(value) => {
                       const color = ColorUtils.int2hex(value);
-                      this._set(`dmCategories.${c.id}.color`, color);
+                      this._set(`pindms.dmCategories.${c.id}.color`, color);
                       this.plugin.reload("CategoryChannel");
                     }}
                   >
