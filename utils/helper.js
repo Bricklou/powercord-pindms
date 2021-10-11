@@ -9,7 +9,7 @@ module.exports = {
 
   getChannelListCategory(settingsMgr, id) {
     if (!id) return null;
-    const categories = settingsMgr.get("dmCategories");
+    const categories = settingsMgr.get("pindms.dmCategories");
 
     if (categories && typeof categories === "object") {
       for (const catId of Object.keys(categories)) {

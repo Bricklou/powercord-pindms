@@ -192,7 +192,10 @@ module.exports = class Settings extends React.Component {
                     defaultValue={c.name}
                     placeholder="category name"
                   />
-                  <Button color={Button.Colors.RED} onClick={() => {}}>
+                  <Button
+                    color={Button.Colors.RED}
+                    onClick={() => this._deleteCategory(c.id)}
+                  >
                     Remove
                   </Button>
                 </div>
@@ -216,6 +219,11 @@ module.exports = class Settings extends React.Component {
         </Category>
       </div>
     );
+  }
+
+  _deleteCategory(id) {
+    this._set(`pindms.dmCategories.${id}`, null);
+    this.plugin.reload("CategoryChannel");
   }
 
   _set(key, value, defaultValue = undefined) {
