@@ -136,7 +136,11 @@ module.exports = async function () {
         }
       }
 
-      for (const [_, category] of Object.entries(dmsCategories)) {
+      const categories = Object.values(dmsCategories).sort(
+        (a, b) => a.pos - b.pos
+      );
+
+      for (const category of categories) {
         const instance = this.categoriesInstances.find(
           (c) => c.props.category.id === category.id
         );
