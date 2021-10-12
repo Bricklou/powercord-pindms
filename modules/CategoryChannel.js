@@ -192,10 +192,27 @@ module.exports = async function () {
             );
 
           res.props.children.push(dms);
+        } else {
+          const dm = category.dms.find(
+            (userId) =>
+              (getDMFromUserId(userId) || userId) ===
+              res.props.selectedChannelId
+          );
+
+          if (dm) {
+            res.props.children.push(() =>
+              React.createElement(Channel, {
+                channelId: getDMFromUserId(dm) || dm,
+                selected: true,
+                key: `${dm}`,
+              })
+            );
+          }
         }
       });
 
       res.props.children = res.props.children.flat(1);
+      helper.forceUpdateElement("#private-channels");
 
       return res;
     }
