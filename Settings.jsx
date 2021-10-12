@@ -46,7 +46,7 @@ module.exports = class Settings extends React.Component {
     const { Text, playSound, ColorUtils } = this.state;
 
     const dmCategories = Object.values(
-      this.props.getSetting("pindms")
+      this.props.getSetting("pindms.dmCategories")
         ? this.props.getSetting("pindms.dmCategories")
         : {}
     );
@@ -186,8 +186,7 @@ module.exports = class Settings extends React.Component {
           }
         >
           {dmCategories.map((c) => {
-            console.log(c);
-            const col = c.color ? ColorUtils.hex2int(c.color) : "";
+            const col = c && c.color ? ColorUtils.hex2int(c.color) : "";
             return (
               <div className="pd-setting-category">
                 <div>

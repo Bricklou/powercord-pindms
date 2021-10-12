@@ -22,12 +22,13 @@ module.exports = class FavoriteFriends extends React.PureComponent {
       // Header
       <h2
         className={`pd-pd-category-header ${classes.privateChannelsHeaderContainer} container-2ax-kl`}
-        onClick={() => {
+        onClick={async () => {
           settingsMgr.set(
             `pindms.dmCategories.${category.id}.expanded`,
             !this.state.expanded
           );
-          helper.forceUpdateElement("#private-channels");
+          await helper.forceUpdateElement("#private-channels");
+
           this.setState({
             expanded: !this.state.expanded,
           });

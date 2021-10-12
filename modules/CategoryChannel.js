@@ -44,6 +44,7 @@ module.exports = async function () {
     "render",
     function (args, res) {
       if (
+        settingsMgr.has("pindms.dmCategories") &&
         Object.values(settingsMgr.get("pindms.dmCategories")).some((cat) =>
           cat.dms.includes(this.props.user?.id)
         )
@@ -212,8 +213,6 @@ module.exports = async function () {
       });
 
       res.props.children = res.props.children.flat(1);
-      helper.forceUpdateElement("#private-channels");
-
       return res;
     }
   );

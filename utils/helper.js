@@ -21,12 +21,18 @@ module.exports = {
   },
 
   forceUpdateElement(el) {
-    if (typeof el === "string") {
-      el = document.querySelector(el);
-    }
-    if (!el) return;
-    el.dispatchEvent(new Event("focusin"));
-    el.dispatchEvent(new Event("focusout"));
+    return new Promise((resolve) => {
+      if (typeof el === "string") {
+        el = document.querySelector(el);
+      }
+      if (!el) return;
+      el.dispatchEvent(new Event("focusin"));
+
+      setTimeout(() => {
+        el.dispatchEvent(new Event("focusout"));
+        resolve();
+      }, 10);
+    });
   },
 
   _getDefaultMethodByKeyword(mdl, keyword) {
