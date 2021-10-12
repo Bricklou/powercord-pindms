@@ -62,7 +62,8 @@ module.exports = class PinDMs extends Plugin {
     this.instances = {};
     if (
       !this.settings.get("pindms") ||
-      !this.settings.get("pindms.dmCategories")
+      !this.settings.get("pindms.general") ||
+      !this.settings.get("pindms.general.friendList")
     ) {
       for (const setting of Object.keys(this.DEFAULT_SETTINGS)) {
         /* eslint-disable-line */ /* I know this is bad practice, hopefully I'll find a better solution soon */
