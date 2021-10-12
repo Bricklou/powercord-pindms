@@ -11,6 +11,7 @@ const {
   settings: { ColorPickerInput },
 } = require("powercord/components");
 const { Sounds } = require("./Constants");
+const contextAction = require("./utils/contextActions");
 
 module.exports = class Settings extends React.Component {
   constructor(props) {
@@ -186,13 +187,15 @@ module.exports = class Settings extends React.Component {
           }
         >
           {dmCategories.map((c) => {
-            const col = c && c.color ? ColorUtils.hex2int(c.color) : "";
+            if (!c) return null;
+            const col = c.color ? ColorUtils.hex2int(c.color) : "";
             return (
               <div className="pd-setting-category">
                 <div>
                   <TextInput
                     defaultValue={c.name}
                     placeholder="category name"
+                    onChange={(value) => this._updateCategoryName(c.id, value)}
                   />
                   <Button
                     color={Button.Colors.RED}
@@ -204,7 +207,8 @@ module.exports = class Settings extends React.Component {
                 <div>
                   <ColorPickerInput
                     customColor={col}
-                    value={ColorUtils.hex2int("transparent")}
+                    value={col}
+                    defaultColor={col}
                     onChange={(value) => {
                       const color = ColorUtils.int2hex(value);
                       this._set(`pindms.dmCategories.${c.id}.color`, color);
@@ -217,9 +221,31 @@ module.exports = class Settings extends React.Component {
               </div>
             );
           })}
-          <Button color={Button.Colors.BRAND}>Add</Button>
+          <Button
+            color={Button.Colors.BRAND}
+            onClick={() => this._addCategory(dmCategories)}
+          >
+            Add
+          </Button>
         </Category>
       </div>
+    );
+  }
+
+  _updateCategoryName(id, name) {
+    if (!name || !this.props.getSetting(`pindms.dmCategories.${id}`)) return;
+    this._set(`pindms.dmCategories.${id}.name`, name);
+    this.plugin.reload("CategoryChannel");
+  }
+
+  _addCategory(dmCategories) {
+    contextAction.addToNewCategoryModal(
+      Object.keys(this.props.getSetting("pindms.dmCategories") || {}),
+      null,
+      (rndID, obj) => {
+        this._set(`pindms.dmCategories.${rndID}`, obj);
+        this.plugin.reload("CategoryChannel");
+      }
     );
   }
 

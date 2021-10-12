@@ -63,9 +63,15 @@ module.exports = async function () {
             id: "pd-new-channellist",
             color: "colorBrand",
             action: () => {
-              contextAction.addToNewCategoryModal(settingsMgr, id, () =>
-                helper.forceUpdateElement("#private-channels")
+              const keys = Object.keys(
+                settingsMgr.get("pindms.dmCategories") || {}
               );
+
+              contextAction.addToNewCategoryModal(keys, id, (rndID, obj) => {
+                console.log(rndID, obj);
+                settingsMgr.set(`pindms.dmCategories.${rndID}`, obj);
+                helper.forceUpdateElement("#private-channels");
+              });
             },
           })
         );

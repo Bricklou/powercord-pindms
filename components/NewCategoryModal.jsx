@@ -9,7 +9,7 @@ const {
 
 const TextInput = getModuleByDisplayName("TextInput", false);
 
-module.exports = (settingsMgr, id, callback) => {
+module.exports = (keys, id, callback) => {
   return class NewCategoryModal extends React.PureComponent {
     constructor(props) {
       super(props);
@@ -20,17 +20,16 @@ module.exports = (settingsMgr, id, callback) => {
     }
 
     generateRandomId() {
-      const keys = settingsMgr.getKeys("pindms.dmCategories");
       const min = Math.pow(10, 16);
       const max = Math.pow(10, 17) - 1;
       const gen = () => Math.floor(Math.random() * (max - min) + min);
-      let id = gen();
+      let generatedID = gen();
 
-      while (keys.includes(id)) {
-        id = gen();
+      while (keys.includes(generatedID)) {
+        generatedID = gen();
       }
 
-      return id;
+      return generatedID;
     }
 
     render() {
@@ -56,14 +55,13 @@ module.exports = (settingsMgr, id, callback) => {
               disabled={this.state.name == ""}
               onClick={() => {
                 const rndID = this.generateRandomId();
-                settingsMgr.set(`pindms.dmCategories.${rndID}`, {
+                callback(rndID, {
                   expanded: false,
-                  dms: [id],
+                  dms: id ? [id] : [],
                   id: rndID,
                   name: this.state.name,
-                  pos: settingsMgr.getLength("pindms.dmCategories") || 0,
+                  pos: keys.length || 0,
                 });
-                callback();
                 closeModal();
               }}
               type="submit"

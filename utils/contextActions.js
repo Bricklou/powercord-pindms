@@ -2,8 +2,8 @@ const { Modal, open } = require("powercord/modal");
 const { React } = require("powercord/webpack");
 const NewCategoryModal = require("../components/NewCategoryModal");
 
-function addToNewCategoryModal(settingsMgr, id, callback) {
-  open(NewCategoryModal(settingsMgr, id, callback));
+function addToNewCategoryModal(keys, id, callback) {
+  open(NewCategoryModal(keys, id, callback));
 }
 
 function addToServerList(settingsMgr, id, callback) {
