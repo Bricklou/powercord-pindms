@@ -42,7 +42,10 @@ module.exports = class FavoriteFriends extends React.PureComponent {
         </span>
         <NumberBadge
           count={count}
-          style={{ backgroundColor: "rgb(var(--accentcolor))", width: "16px" }}
+          className="pd-dm-category-count"
+          style={{
+            backgroundColor: category.color ?? "",
+          }}
         />
 
         <svg
