@@ -16,7 +16,6 @@ module.exports = class FavoriteFriends extends React.PureComponent {
     const { classes, category, count, settingsMgr } = this.props;
     if (!classes || !category || !category.dms.length || !settingsMgr)
       return null;
-    const { NumberBadge } = getModule(["NumberBadge"], false);
 
     return [
       // Header
@@ -38,15 +37,8 @@ module.exports = class FavoriteFriends extends React.PureComponent {
           className={classes.headerText}
           style={{ color: category.color ?? "var(--channels-default)" }}
         >
-          {category.name}
+          {category.name} - {count}
         </span>
-        <NumberBadge
-          count={count}
-          className="pd-dm-category-count"
-          style={{
-            backgroundColor: category.color ?? "",
-          }}
-        />
 
         <svg
           className={`dm-category-expanded-icon ${

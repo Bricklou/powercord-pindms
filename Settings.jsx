@@ -195,7 +195,9 @@ module.exports = class Settings extends React.Component {
                   <TextInput
                     defaultValue={c.name}
                     placeholder="category name"
-                    onChange={(value) => this._updateCategoryName(c.id, value)}
+                    onBlur={(e) =>
+                      this._updateCategoryName(c.id, e.target.value)
+                    }
                   />
                   <Button
                     color={Button.Colors.RED}
@@ -233,6 +235,7 @@ module.exports = class Settings extends React.Component {
   }
 
   _updateCategoryName(id, name) {
+    console.log(id, name);
     if (!name || !this.props.getSetting(`pindms.dmCategories.${id}`)) return;
     this._set(`pindms.dmCategories.${id}.name`, name);
     this.plugin.reload("CategoryChannel");
