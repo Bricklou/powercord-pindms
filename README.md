@@ -2,7 +2,7 @@
 
 Allows you to pin DMs, making them appear at the top of your DMs/ServerList
 
-> This plugin is a port of the origina `Pin DMs` plugin created for BetterDiscord.
+> This plugin is a port of the original `Pin DMs` plugin created for BetterDiscord.
 
 ## Todo
 
@@ -15,7 +15,7 @@ Allows you to pin DMs, making them appear at the top of your DMs/ServerList
     - [x] Categories count (number of users/groups inside)
     - [x] Collapse categories
     - [ ] Add icons to menu items
-    - [ ] Implemented "pin" icon on channel button
+    - [x] Implemented "pin" icon on channel button
     - [ ] Change settings like on Better Friend List ([here](https://i.at.ls/f/gd1id4.png))
 - [ ] Server List
     - [ ] Pin/Unpin DMs in servers list
