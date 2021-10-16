@@ -19,10 +19,20 @@ const Channel = require("../components/Channel");
 
 const contextAction = require("../utils/contextActions");
 
-function setupContextMenu(settingsMgr, id) {
+function setupContextMenu(settingsMgr, channel) {
   const items = [];
 
   const gListSetting = settingsMgr.get("pindms.dmCategories");
+
+  let id = null
+
+  if (channel.type === 3) {
+    id = channel.id
+  } else if (channel.type === 1) {
+    id = channel.recipients[0]
+  }
+
+  if (!id) return
 
   if (gListSetting && typeof gListSetting === "object") {
     for (const [_key, item] of Object.entries(gListSetting)) {
@@ -134,11 +144,12 @@ module.exports = async function () {
           res.props.children,
         ];
       } else if (
+        this.props.channel &&
         !Object.values(settingsMgr.get("pindms.dmCategories")).some((cat) =>
           cat.dms.includes(this.props.channel?.id)
         )
       ) {
-        const pinMenu = setupContextMenu(settingsMgr, this.props.channel?.id);
+        const pinMenu = setupContextMenu(settingsMgr, this.props.channel);
 
         res.props.children = [
           React.createElement(
@@ -249,7 +260,6 @@ module.exports = async function () {
                 key: `${userId}`,
               })
           );
-          console.log(dms)
 
           res.props.children.push(dms);
         } else {
@@ -272,7 +282,6 @@ module.exports = async function () {
       });
 
       res.props.children = res.props.children.flat(1);
-      console.log(res.props.children)
       return res;
     }
   );
