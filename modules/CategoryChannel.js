@@ -3,17 +3,70 @@ const { open: openModal } = require("powercord/modal");
 const {
   Icons: { Keyboard, Pin },
   Tooltip,
+  ContextMenu,
 } = require("powercord/components");
 const {
   React,
   getModuleByDisplayName,
   getModule,
+  contextMenu,
 } = require("powercord/webpack");
 
 const FavoriteFriends = require("../components/FavoriteFriends");
 const InformationModal = require("../components/InformationModal");
 const helper = require("../utils/helper");
 const Channel = require("../components/Channel");
+
+const contextAction = require("../utils/contextActions");
+
+function setupContextMenu(settingsMgr, id) {
+  const items = [];
+
+  const gListSetting = settingsMgr.get("pindms.dmCategories");
+
+  if (gListSetting && typeof gListSetting === "object") {
+    for (const [_key, item] of Object.entries(gListSetting)) {
+      items.push({
+        type: "button",
+        name: item.name,
+        id: `${item.id}`,
+        onClick() {
+          settingsMgr.push(`pindms.dmCategories.${item.id}.dms`, id, true);
+          helper.forceUpdateElement("#private-channels");
+        },
+      });
+    }
+  }
+
+  items.push({
+    type: "button",
+    name: "Add to new Category",
+    id: "pd-add-pin-shortcut",
+    color: "colorBrand",
+    onClick() {
+      const keys = Object.keys(settingsMgr.get("pindms.dmCategories") || {});
+
+      contextAction.addToNewCategoryModal(keys, id, (rndID, obj) => {
+        settingsMgr.set(`pindms.dmCategories.${rndID}`, obj);
+        helper.forceUpdateElement("#private-channels");
+      });
+    },
+  });
+
+  const menu = React.createElement(ContextMenu, {
+    itemGroups: [items],
+  });
+
+  const menucont = React.createElement(
+    "div",
+    {
+      id: "pd-add-pin-context-container",
+    },
+    menu
+  );
+
+  return menucont;
+}
 
 /*
  * [ Friend DM Channel ]
@@ -84,20 +137,24 @@ module.exports = async function () {
         !Object.values(settingsMgr.get("pindms.dmCategories")).some((cat) =>
           cat.dms.includes(this.props.channel?.id)
         )
-      )
+      ) {
+        const pinMenu = setupContextMenu(settingsMgr, this.props.channel?.id);
+
         res.props.children = [
           React.createElement(
             Tooltip,
             { text: "Pin", position: "top", className: "pd-pin" },
             React.createElement(Pin, {
               className: "pd-pin",
-              onClick: () => {
-                //do shit
+              onClick: (e) => {
+                contextMenu.openContextMenu(e, () => pinMenu);
               },
             })
           ),
           res.props.children,
         ];
+      }
+
       return res;
     }
   );
@@ -159,6 +216,7 @@ module.exports = async function () {
               category,
               count: category.dms.length,
               settingsMgr,
+              key: category.id,
             });
 
             this.categoriesInstances.push(el);
@@ -175,22 +233,23 @@ module.exports = async function () {
         res.props.children.push(() => instance);
 
         if (settingsMgr.get(`pindms.dmCategories.${category.id}.expanded`)) {
-          const dms = category.dms
-            .sort(
-              (a, b) =>
-                lastMessageId(getDMFromUserId(b)) -
-                lastMessageId(getDMFromUserId(a))
-            )
-            .map(
-              (userId) => () =>
-                React.createElement(Channel, {
-                  channelId: getDMFromUserId(userId) || userId,
-                  selected:
-                    (getDMFromUserId(userId) || userId) ===
-                    res.props.selectedChannelId,
-                  key: `${userId}`,
-                })
-            );
+          let dms = category.dms;
+          dms = dms.sort(
+            (a, b) =>
+              lastMessageId(getDMFromUserId(b)) -
+              lastMessageId(getDMFromUserId(a))
+          );
+
+          dms = dms.map((userId) => 
+            () => React.createElement(Channel, {
+                channelId: getDMFromUserId(userId) || userId,
+                selected:
+                  (getDMFromUserId(userId) || userId) ===
+                  res.props.selectedChannelId,
+                key: `${userId}`,
+              })
+          );
+          console.log(dms)
 
           res.props.children.push(dms);
         } else {
@@ -213,6 +272,7 @@ module.exports = async function () {
       });
 
       res.props.children = res.props.children.flat(1);
+      console.log(res.props.children)
       return res;
     }
   );

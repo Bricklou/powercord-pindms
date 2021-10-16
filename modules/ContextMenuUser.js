@@ -68,7 +68,6 @@ module.exports = async function () {
               );
 
               contextAction.addToNewCategoryModal(keys, id, (rndID, obj) => {
-                console.log(rndID, obj);
                 settingsMgr.set(`pindms.dmCategories.${rndID}`, obj);
                 helper.forceUpdateElement("#private-channels");
               });
