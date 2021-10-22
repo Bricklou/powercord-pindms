@@ -16,10 +16,10 @@ Allows you to pin DMs, making them appear at the top of your DMs/ServerList
     - [x] Collapse categories
     - [ ] Add icons to menu items
     - [x] Implemented "pin" icon on channel button
-    - [ ] Change settings like on Better Friend List ([here](https://i.at.ls/f/gd1id4.png))
 - [ ] Server List
     - [ ] Pin/Unpin DMs in servers list
 - [ ] Settings
+    - [ ] Change settings like on Better Status Indicator ([here](https://i.at.ls/f/gd1id4.png) and [here](https://github.com/GriefMoDz/better-status-indicators/blob/master/components/Settings.jsx)) 
     - [ ] Category settings modal
     - [x] Category color
     - [x] Category name
