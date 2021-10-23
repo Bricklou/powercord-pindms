@@ -2,7 +2,7 @@
   "compilerOptions": {
     "lib": ["dom", "es2020", "es2020.promise"],
     "paths": {
-      "powercord/*": ["./fake_node_modules/powercord/*"]
+      "powercord/*": ["../../../fake_node_modules/powercord/*"]
     }
   }
 }

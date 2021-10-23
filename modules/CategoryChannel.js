@@ -269,8 +269,6 @@ module.exports = async function () {
               })
           );
 
-          console.log(dms);
-
           res.props.children.push(dms);
         } else {
           const dm = category.dms.find(

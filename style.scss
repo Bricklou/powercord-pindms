@@ -139,11 +139,8 @@
   padding-bottom: 64px;
 }
 
-.pd-notification-sounds-icon {
-  background: url("https://canary.discordapp.com/assets/f9b93aa0d9985bd2b678da58ed0d75d2.svg")
-    50% no-repeat !important;
-  width: auto;
-  height: auto;
+.pd-notif-sound-settings-description {
+  margin-bottom: 20px;
 }
 
 .pd-dm-category-count {
@@ -299,4 +296,29 @@ html body .pd-ff-header {
   .pd-nameCell {
     padding: 0px 40px;
   }
+}
+
+/**
+ * Settings
+ */
+.pd-settings {
+  &-title {
+    margin-bottom: 0;
+  }
+
+  &-tab-bar {
+    margin-bottom: 25px;
+
+    .selected-3s45Ha {
+      cursor: pointer !important;
+    }
+  }
+
+  &-tab-bar ~ .divider-3573oO {
+    margin-bottom: 20px;
+  }
+}
+
+.pd-settings-tab-bar ~ .divider-3573oO {
+  margin-bottom: 20px;
 }

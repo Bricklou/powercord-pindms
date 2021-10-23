@@ -4,6 +4,8 @@ const Settings = require('./components/settings/Settings');
 const { InjectionIDs } = require('./Constants');
 require('./utils/bootstrap');
 
+const i18n = require('./i18n');
+
 module.exports = class PinDMs extends Plugin {
   /**
    * Start the plugin
@@ -40,6 +42,8 @@ module.exports = class PinDMs extends Plugin {
         }
       }
     };
+
+    powercord.api.i18n.loadAllStrings(i18n);
 
     // Register settings menu for PinDMs
     powercord.api.settings.registerSettings('pindms', {
@@ -162,7 +166,7 @@ module.exports = class PinDMs extends Plugin {
    * Overwrites the normal Powercord .log method.
    * @param {any} data Data to log
    */
-  log (data) {
-    console.log('%c[PinDMs]', 'color: #ffeb3b', data);
+  log (...data) {
+    console.log('%c[PinDMs]', 'color: #ffeb3b', ...data);
   }
 };
