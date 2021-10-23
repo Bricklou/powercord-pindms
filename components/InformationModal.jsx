@@ -1,26 +1,37 @@
+/* eslint-disable new-cap */
 const {
   React,
   getModule,
-  constants: { Routes },
-} = require("powercord/webpack");
-const { Confirm } = require("powercord/components/modal");
-const { close: closeModal } = require("powercord/modal");
+  constants: { Routes }
+} = require('powercord/webpack');
+const { Confirm } = require('powercord/components/modal');
+const { close: closeModal } = require('powercord/modal');
 
 module.exports = class InformationModal extends React.Component {
-  parse(time) {
+  parse (time) {
     const fm = [
       Math.floor(time / 60 / 60 / 24 / 30), // MONTHS
       Math.floor(time / 60 / 60 / 24) % 30, // DAYS
       Math.floor(time / 60 / 60) % 24, // HOURS
       Math.floor(time / 60) % 60, // MINUTES
-      Math.floor(time % 60), // SECONDS
+      Math.floor(time % 60) // SECONDS
     ];
     const timeArr = [
-      { type: { singular: "month", plural: "months" }, amount: fm[0] },
-      { type: { singular: "day", plural: "days" }, amount: fm[1] },
-      { type: { singular: "hour", plural: "hours" }, amount: fm[2] },
-      { type: { singular: "minute", plural: "minutes" }, amount: fm[3] },
-      { type: { singular: "second", plural: "seconds" }, amount: fm[4] },
+      { type: { singular: 'month',
+        plural: 'months' },
+      amount: fm[0] },
+      { type: { singular: 'day',
+        plural: 'days' },
+      amount: fm[1] },
+      { type: { singular: 'hour',
+        plural: 'hours' },
+      amount: fm[2] },
+      { type: { singular: 'minute',
+        plural: 'minutes' },
+      amount: fm[3] },
+      { type: { singular: 'second',
+        plural: 'seconds' },
+      amount: fm[4] }
     ];
     const properArr = [];
     for (const i in timeArr) {
@@ -34,32 +45,32 @@ module.exports = class InformationModal extends React.Component {
       }
     }
     return (
-      properArr.slice(0, -2).join(", ") +
-        (properArr.slice(0, -2).length ? ", " : "") +
-        properArr.slice(-2).join(" and ") || "0 seconds"
+      properArr.slice(0, -2).join(', ') +
+        (properArr.slice(0, -2).length ? ', ' : '') +
+        properArr.slice(-2).join(' and ') || '0 seconds'
     );
   }
 
-  async componentDidMount() {
-    const getUser = (await getModule(["getUser"])).getUser;
-    const getGuild = (await getModule(["getGuild"])).getGuild;
-    const getChannel = (await getModule(["getChannel"])).getChannel;
+  async componentDidMount () {
+    const { getUser } = await getModule([ 'getUser' ]);
+    const { getGuild } = await getModule([ 'getGuild' ]);
+    const { getChannel } = await getModule([ 'getChannel' ]);
     const channel = await getChannel(this.props.channel);
-    const { transitionTo } = await getModule(["transitionTo"]);
+    const { transitionTo } = await getModule([ 'transitionTo' ]);
     this.setState({
       getChannel,
       getUser,
       getGuild,
-      extractTimestamp: (await getModule(["extractTimestamp"]))
+      extractTimestamp: (await getModule([ 'extractTimestamp' ]))
         .extractTimestamp,
       user: await getUser(this.props.user.id),
       channel,
       transitionTo,
-      guild: channel ? await getGuild(channel.guild_id) : null,
+      guild: channel ? await getGuild(channel.guild_id) : null
     });
   }
 
-  render() {
+  render () {
     if (!this.state) {
       return null;
     }
@@ -83,27 +94,31 @@ module.exports = class InformationModal extends React.Component {
             const timestamp = extractTimestamp(this.props.message);
             return (
               <div className="text-2F8PnX colorStandard-2KCXvj marginBottom20-32qID7 primary-jw0I4K">
-                {user.username} was last seen in{" "}
-                {guild ? (
-                  <span>
-                    <span
-                      className="wrapperHover-1GktnT wrapper-3WhCwL"
-                      onClick={() => {
-                        transitionTo(Routes.CHANNEL(guild.id, channel.id));
-                        closeModal();
-                      }}
-                    >
+                {user.username} was last seen in{' '}
+                {guild
+                  ? (
+                    <span>
+                      <span
+                        className="wrapperHover-1GktnT wrapper-3WhCwL"
+                        onClick={() => {
+                          transitionTo(Routes.CHANNEL(guild.id, channel.id));
+                          closeModal();
+                        }}
+                      >
                       #{channel.name}
-                    </span>{" "}
+                      </span>{' '}
                     ({guild.name})
-                  </span>
-                ) : channel.recipients.length <= 2 ? (
-                  "your DMs"
-                ) : (
-                  <span className="wrapperHover-1GktnT wrapper-3WhCwL">
-                    {channel.name}
-                  </span>
-                )}{" "}
+                    </span>
+                  )
+                  : channel.recipients.length <= 2
+                    ? (
+                      'your DMs'
+                    )
+                    : (
+                      <span className="wrapperHover-1GktnT wrapper-3WhCwL">
+                        {channel.name}
+                      </span>
+                    )}{' '}
                 around {this.parse((Date.now() - timestamp) / 1000)} ago
               </div>
             );

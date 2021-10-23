@@ -2,24 +2,24 @@ const {
   React,
   i18n: { Messages },
   getModule,
-  getModuleByDisplayName,
-} = require("powercord/webpack");
-const { Flex, Icon } = require("powercord/components");
+  getModuleByDisplayName
+} = require('powercord/webpack');
+const { Flex, Icon } = require('powercord/components');
 
 module.exports = ({ title, _this }) => {
-  const [sortKey, setSortKey] = React.useState(_this.sortKey);
-  const [sortReversed, setSortReversed] = React.useState(_this.sortReversed);
-  const [query, setQuery] = React.useState(_this.searchQuery);
-  const headers = getModule(["headerCell"], false);
-  const SearchBar = getModuleByDisplayName("SearchBar", false);
+  const [ sortKey, setSortKey ] = React.useState(_this.sortKey);
+  const [ sortReversed, setSortReversed ] = React.useState(_this.sortReversed);
+  const [ query, setQuery ] = React.useState(_this.searchQuery);
+  const headers = getModule([ 'headerCell' ], false);
+  const SearchBar = getModuleByDisplayName('SearchBar', false);
   const updateList = () => {
     document
-      .querySelector(".peopleList-3c4jOR")
-      .dispatchEvent(new Event("focusin"));
+      .querySelector('.peopleList-3c4jOR')
+      .dispatchEvent(new Event('focusin'));
     setTimeout(() =>
       document
-        .querySelector(".peopleList-3c4jOR")
-        .dispatchEvent(new Event("focusout"))
+        .querySelector('.peopleList-3c4jOR')
+        .dispatchEvent(new Event('focusout'))
     );
   };
 
@@ -29,17 +29,20 @@ module.exports = ({ title, _this }) => {
         <div className={headers.headerCellContent}>{title}</div>
       </div>
       {[
-        { key: "usernameLower", label: Messages.FRIENDS_COLUMN_NAME },
-        { key: "statusIndex", label: Messages.FRIENDS_COLUMN_STATUS },
-        { key: "isPinned", label: "pinned" },
+        { key: 'usernameLower',
+          label: Messages.FRIENDS_COLUMN_NAME },
+        { key: 'statusIndex',
+          label: Messages.FRIENDS_COLUMN_STATUS },
+        { key: 'isPinned',
+          label: 'pinned' }
       ].map((data) => (
         <div
           className={[
-            "pd-header pd-nameCell",
+            'pd-header pd-nameCell',
             headers.headerCell,
             sortKey === data.key && headers.headerCellSorted,
-            headers.clickable,
-          ].join(" ")}
+            headers.clickable
+          ].join(' ')}
           onClick={() => {
             if (sortKey === data.key) {
               if (!sortReversed) {
@@ -47,9 +50,9 @@ module.exports = ({ title, _this }) => {
                 _this.sortReversed = true;
                 updateList();
               } else {
-                setSortKey("");
+                setSortKey('');
                 setSortReversed(false);
-                _this.sortKey = "";
+                _this.sortKey = '';
                 _this.sortReversed = false;
                 updateList();
               }
@@ -63,11 +66,11 @@ module.exports = ({ title, _this }) => {
           }}
         >
           <div className={headers.headerCellContent}>
-            {data.label}{" "}
+            {data.label}{' '}
             {sortKey === data.key && (
               <Icon
                 className={headers.sortIcon}
-                name={sortReversed ? "ArrowDropDown" : "ArrowDropUp"}
+                name={sortReversed ? 'ArrowDropDown' : 'ArrowDropUp'}
               />
             )}
           </div>
@@ -82,8 +85,8 @@ module.exports = ({ title, _this }) => {
           setTimeout(() => updateList(), 100);
         }}
         onClear={() => {
-          setQuery("");
-          _this.searchQuery = "";
+          setQuery('');
+          _this.searchQuery = '';
         }}
       />
     </Flex>

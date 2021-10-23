@@ -1,11 +1,11 @@
-const { React } = require("powercord/webpack");
-const { getModule } = require("powercord/webpack");
-const { inject } = require("powercord/injector");
-const { findInReactTree } = require("powercord/util");
+const { React } = require('powercord/webpack');
+const { getModule } = require('powercord/webpack');
+const { inject } = require('powercord/injector');
+const { findInReactTree } = require('powercord/util');
 
-const { InjectionIDs } = require("../Constants");
-const contextAction = require("../utils/contextActions");
-const helper = require("../utils/helper");
+const { InjectionIDs } = require('../Constants');
+const contextAction = require('../utils/contextActions');
+const helper = require('../utils/helper');
 
 /*
  * [ Context Menu ]
@@ -13,14 +13,14 @@ const helper = require("../utils/helper");
  * Contributors: Joakim#9814, Bowser65#0001, Juby210#0577
  */
 module.exports = async function () {
-  const { MenuItem } = await getModule(["MenuItem"]);
-  const settingsMgr = require("../utils/settingsMgr")(this.settings);
+  const { MenuItem } = await getModule([ 'MenuItem' ]);
+  const settingsMgr = require('../utils/settingsMgr')(this.settings);
 
   for (const module of InjectionIDs.ContextMenuUser.map((id) =>
-    id.replace("pd-", "")
+    id.replace('pd-', '')
   )) {
     const m = await helper.getDefaultModule(module);
-    inject(`pd-${module}`, m, "default", (args, res) => {
+    inject(`pd-${module}`, m, 'default', (args, res) => {
       const isUser = args[0].user !== null;
       const { id } = isUser ? args[0].user : args[0].channel;
 
@@ -28,18 +28,20 @@ module.exports = async function () {
         res,
         (c) =>
           Array.isArray(c) &&
-          c.find((item) => item && item.props && item.props.id === "block")
+          c.find((item) => item && item.props && item.props.id === 'block')
       );
-      if (!group) return res;
+      if (!group) {
+        return res;
+      }
 
       const currentCategory = helper.getChannelListCategory(settingsMgr, id);
 
       if (!currentCategory) {
         const groupList = [];
-        const gListSetting = settingsMgr.get("pindms.dmCategories");
+        const gListSetting = settingsMgr.get('pindms.dmCategories');
 
-        if (gListSetting && typeof gListSetting === "object") {
-          for (const [_key, item] of Object.entries(gListSetting)) {
+        if (gListSetting && typeof gListSetting === 'object') {
+          for (const item of Object.values(gListSetting)) {
             groupList.push(
               React.createElement(MenuItem, {
                 label: item.name,
@@ -50,8 +52,8 @@ module.exports = async function () {
                     id,
                     true
                   );
-                  helper.forceUpdateElement("#private-channels");
-                },
+                  helper.forceUpdateElement('#private-channels');
+                }
               })
             );
           }
@@ -59,19 +61,19 @@ module.exports = async function () {
 
         groupList.push(
           React.createElement(MenuItem, {
-            label: "Add to new Category",
-            id: "pd-new-channellist",
-            color: "colorBrand",
+            label: 'Add to new Category',
+            id: 'pd-new-channellist',
+            color: 'colorBrand',
             action: () => {
               const keys = Object.keys(
-                settingsMgr.get("pindms.dmCategories") || {}
+                settingsMgr.get('pindms.dmCategories') || {}
               );
 
               contextAction.addToNewCategoryModal(keys, id, (rndID, obj) => {
                 settingsMgr.set(`pindms.dmCategories.${rndID}`, obj);
-                helper.forceUpdateElement("#private-channels");
+                helper.forceUpdateElement('#private-channels');
               });
-            },
+            }
           })
         );
 
@@ -79,36 +81,38 @@ module.exports = async function () {
           React.createElement(
             MenuItem,
             {
-              id: "pd-main-item",
-              label: "PinDMs",
+              id: 'pd-main-item',
+              label: 'PinDMs'
             },
             [
               React.createElement(
                 MenuItem,
                 {
-                  id: "pd-add",
-                  label: "Pin to channel list",
+                  id: 'pd-add',
+                  label: 'Pin to channel list'
                 },
                 groupList
               ),
               React.createElement(MenuItem, {
-                id: "pd-add-sever",
-                label: "Pin to server list (not yet implemented)",
+                id: 'pd-add-sever',
+                label: 'Pin to server list (not yet implemented)',
                 action: () => {
-                  contextAction.addToServerList(settingsMgr, id, () => {});
-                },
-              }),
+                  contextAction.addToServerList(settingsMgr, id, () => null);
+                }
+              })
             ]
           )
         );
       } else {
         group.push(
           React.createElement(MenuItem, {
-            id: "pd-remove",
-            label: "Unpin from the category",
-            color: "colorDanger",
+            id: 'pd-remove',
+            label: 'Unpin from the category',
+            color: 'colorDanger',
             action: () => {
-              if (!currentCategory && !currentCategory.id) return;
+              if (!currentCategory && !currentCategory.id) {
+                return;
+              }
               let dms = settingsMgr.get(
                 `pindms.dmCategories.${currentCategory.id}.dms`
               );
@@ -119,8 +123,8 @@ module.exports = async function () {
                   dms
                 );
               }
-              helper.forceUpdateElement("#private-channels");
-            },
+              helper.forceUpdateElement('#private-channels');
+            }
           })
         );
       }

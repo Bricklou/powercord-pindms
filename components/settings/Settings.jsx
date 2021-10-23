@@ -1,54 +1,53 @@
-const { React } = require("powercord/webpack");
-const { getModule, getModuleByDisplayName } = require("powercord/webpack");
+const { React } = require('powercord/webpack');
+const { getModule, getModuleByDisplayName } = require('powercord/webpack');
 const {
   SwitchItem,
   TextInput,
-  Category,
-  FormItem,
-} = require("powercord/components/settings");
+  Category
+} = require('powercord/components/settings');
 const {
   Button,
-  settings: { ColorPickerInput },
-} = require("powercord/components");
-const { Sounds } = require("./Constants");
-const contextAction = require("./utils/contextActions");
+  settings: { ColorPickerInput }
+} = require('powercord/components');
+const { Sounds } = require('../../Constants');
+const contextAction = require('../../utils/contextActions');
 
 module.exports = class Settings extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     const get = props.getSetting;
-    this.plugin = powercord.pluginManager.get("powercord-pindms");
+    this.plugin = powercord.pluginManager.get('powercord-pindms');
 
     this.state = {
-      friendList: get("friendList", {}),
-      notifsounds: get("notifsounds", {}),
+      friendList: get('friendList', {}),
+      notifsounds: get('notifsounds', {}),
 
       openCat: {
         friendList: false,
         notificationSound: false,
-        pinCategories: false,
-      },
+        pinCategories: false
+      }
     };
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     this.setState({
-      Text: await getModuleByDisplayName("Text"),
-      playSound: (await getModule(["playSound"])).playSound,
-      ColorUtils: await getModule(["isValidHex"]),
+      Text: await getModuleByDisplayName('Text'),
+      playSound: (await getModule([ 'playSound' ])).playSound,
+      ColorUtils: await getModule([ 'isValidHex' ])
     });
   }
 
-  render() {
+  render () {
     if (!this.state.Text) {
       return null;
     }
     const { Text, playSound, ColorUtils } = this.state;
 
     const dmCategories = Object.values(
-      this.props.getSetting("pindms.dmCategories")
-        ? this.props.getSetting("pindms.dmCategories")
+      this.props.getSetting('pindms.dmCategories')
+        ? this.props.getSetting('pindms.dmCategories')
         : {}
     );
     return (
@@ -60,18 +59,18 @@ module.exports = class Settings extends React.Component {
             this.setState({
               openCat: {
                 ...this.state.openCat,
-                friendList: !this.state.openCat.friendList,
-              },
+                friendList: !this.state.openCat.friendList
+              }
             })
           }
         >
           <SwitchItem
             note="Toggles the functionality of the information button within the DM list on favorited friends"
-            style={{ marginTop: "16px" }}
+            style={{ marginTop: '16px' }}
             value={this.state.friendList.infomodal}
             onChange={(value) => {
-              this._set("friendList.infomodal", value);
-              this.plugin.reload("InformationModal");
+              this._set('friendList.infomodal', value);
+              this.plugin.reload('InformationModal');
             }}
           >
             Information Modal
@@ -81,8 +80,8 @@ module.exports = class Settings extends React.Component {
             note="Have sort options in the friend list"
             value={this.state.friendList.sortoptions}
             onChange={(value) => {
-              this._set("friendList.sortoptions", value);
-              this.plugin.reload("FriendsList");
+              this._set('friendList.sortoptions', value);
+              this.plugin.reload('FriendsList');
             }}
           >
             Show sort options
@@ -92,8 +91,8 @@ module.exports = class Settings extends React.Component {
             note="Show mutual guilds in the friend list"
             value={this.state.friendList.mutualguilds}
             onChange={(value) => {
-              this._set("friendList.mutualguilds", value);
-              this.plugin.reload("FriendsList");
+              this._set('friendList.mutualguilds', value);
+              this.plugin.reload('FriendsList');
             }}
           >
             Show mutual guilds
@@ -103,8 +102,8 @@ module.exports = class Settings extends React.Component {
             note="Show total amount for all/requested/blocked"
             value={this.state.friendList.showtotal}
             onChange={(value) => {
-              this._set("friendList.showtotal", value);
-              this.plugin.reload("FriendsList");
+              this._set('friendList.showtotal', value);
+              this.plugin.reload('FriendsList');
             }}
           >
             Show total amount for all/requested/blocked
@@ -118,8 +117,8 @@ module.exports = class Settings extends React.Component {
             this.setState({
               openCat: {
                 ...this.state.openCat,
-                notificationSound: !this.state.openCat.notificationSound,
-              },
+                notificationSound: !this.state.openCat.notificationSound
+              }
             })
           }
         >
@@ -134,9 +133,9 @@ module.exports = class Settings extends React.Component {
           {Object.keys(Sounds).map((sound) => (
             <div
               className="pd-notification-sounds"
-              style={{ marginBottom: "16px" }}
+              style={{ marginBottom: '16px' }}
             >
-              <div style={{ float: "left" }}>
+              <div style={{ float: 'left' }}>
                 <Text className="title-31JmR4 titleDefault-a8-ZSr medium-zmzTW- size16-14cGz5 height20-mO2eIN">
                   <label className="title-31JmR4 titleDefault-a8-ZSr medium-zmzTW- size16-14cGz5 height20-mO2eIN">
                     {Sounds[sound]}
@@ -144,29 +143,30 @@ module.exports = class Settings extends React.Component {
                 </Text>
               </div>
 
-              <div style={{ float: "right" }}>
-                <div style={{ float: "left" }}>
+              <div style={{ float: 'right' }}>
+                <div style={{ float: 'left' }}>
                   <button
                     onClick={() => playSound(sound)}
                     className="pd-notification-sounds-icon button-1Pkqso iconButton-eOTKg4 button-38aScr lookOutlined-3sRXeN colorWhite-rEQuAQ buttonSize-2Pmk-w iconButtonSize-U9SCYe grow-q77ONN"
                   />
                 </div>
-                <div style={{ float: "right", paddingLeft: "16px" }}>
+                <div style={{ float: 'right',
+                  paddingLeft: '16px' }}>
                   <TextInput
                     onChange={(value) => {
                       this.state.notifsounds[sound] = {
                         url: value,
-                        volume: 0.6,
+                        volume: 0.6
                       };
-                      this._set("notifsounds", this.state.notifsounds);
+                      this._set('notifsounds', this.state.notifsounds);
                     }}
                     className="pd-textarea-notifsounds"
-                    style={{ height: "33px" }}
+                    style={{ height: '33px' }}
                     placeholder="Link to MP3 file"
                     defaultValue={
                       this.state.notifsounds[sound]
                         ? this.state.notifsounds[sound].url
-                        : ""
+                        : ''
                     }
                   />
                 </div>
@@ -181,14 +181,16 @@ module.exports = class Settings extends React.Component {
             this.setState({
               openCat: {
                 ...this.state.openCat,
-                pinCategories: !this.state.openCat.pinCategories,
-              },
+                pinCategories: !this.state.openCat.pinCategories
+              }
             })
           }
         >
           {dmCategories.map((c) => {
-            if (!c) return null;
-            const col = c.color ? ColorUtils.hex2int(c.color) : "";
+            if (!c) {
+              return null;
+            }
+            const col = c.color ? ColorUtils.hex2int(c.color) : '';
             return (
               <div className="pd-setting-category">
                 <div>
@@ -214,7 +216,7 @@ module.exports = class Settings extends React.Component {
                     onChange={(value) => {
                       const color = ColorUtils.int2hex(value);
                       this._set(`pindms.dmCategories.${c.id}.color`, color);
-                      this.plugin.reload("CategoryChannel");
+                      this.plugin.reload('CategoryChannel');
                     }}
                   >
                     Color
@@ -234,38 +236,40 @@ module.exports = class Settings extends React.Component {
     );
   }
 
-  _updateCategoryName(id, name) {
-    if (!name || !this.props.getSetting(`pindms.dmCategories.${id}`)) return;
+  _updateCategoryName (id, name) {
+    if (!name || !this.props.getSetting(`pindms.dmCategories.${id}`)) {
+      return;
+    }
     this._set(`pindms.dmCategories.${id}.name`, name);
-    this.plugin.reload("CategoryChannel");
+    this.plugin.reload('CategoryChannel');
   }
 
-  _addCategory(dmCategories) {
+  _addCategory () {
     contextAction.addToNewCategoryModal(
-      Object.keys(this.props.getSetting("pindms.dmCategories") || {}),
+      Object.keys(this.props.getSetting('pindms.dmCategories') || {}),
       null,
       (rndID, obj) => {
         this._set(`pindms.dmCategories.${rndID}`, obj);
-        this.plugin.reload("CategoryChannel");
+        this.plugin.reload('CategoryChannel');
       }
     );
   }
 
-  _deleteCategory(id) {
-    this._set(`pindms.dmCategories.${id}`, undefined);
-    this.plugin.reload("CategoryChannel");
+  _deleteCategory (id) {
+    this._set(`pindms.dmCategories.${id}`);
+    this.plugin.reload('CategoryChannel');
   }
 
-  _set(key, value, defaultValue = undefined) {
+  _set (key, value, defaultValue) {
     if (!value && defaultValue) {
       value = defaultValue;
     }
 
-    const arr = key.split(".");
+    const arr = key.split('.');
 
     if (arr.length > 1) {
       const mainKey = arr.shift();
-      const subKey = arr.join(".");
+      const subKey = arr.join('.');
 
       const s = Object.assign({}, this.props.getSetting(mainKey));
       s[subKey] = value;

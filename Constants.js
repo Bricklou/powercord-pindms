@@ -1,50 +1,50 @@
 module.exports = {
   Statuses: {
     online: {
-      friendly: "online",
-      class: "online-2S838R",
+      friendly: 'online',
+      class: 'online-2S838R'
     },
     idle: {
-      friendly: "idle",
-      class: "idle-3DEnRT",
+      friendly: 'idle',
+      class: 'idle-3DEnRT'
     },
     dnd: {
-      friendly: "on do not disturb",
-      class: "dnd-1_xrcq",
+      friendly: 'on do not disturb',
+      class: 'dnd-1_xrcq'
     },
     offline: {
-      friendly: "offline",
-      class: "offline-3qoTek",
-    },
+      friendly: 'offline',
+      class: 'offline-3qoTek'
+    }
   },
   InjectionIDs: {
     ContextMenuUser: [
-      "pd-DMUserContextMenu",
-      "pd-GroupDMUserContextMenu",
-      "pd-GuildChannelUserContextMenu",
+      'pd-DMUserContextMenu',
+      'pd-GroupDMUserContextMenu',
+      'pd-GuildChannelUserContextMenu'
     ],
-    ContextMenuGroup: ["pd-GroupDMContextMenu"],
+    ContextMenuGroup: [ 'pd-GroupDMContextMenu' ],
     CategoryChannel: [
-      "pd-direct-messages",
-      "pd-direct-messages-channel",
-      "pd-direct-messages-mount",
+      'pd-direct-messages',
+      'pd-direct-messages-channel',
+      'pd-direct-messages-mount'
     ],
-    FavoriteFriendsSection: ["pd-favorite-friends-tabbar"],
-    InformationModal: ["pd-message-listener"],
-    StatusPopup: ["pd-user"],
-    ChannelTypingIntegration: ["pd-ct-integration"],
-    SpotifyIntegration: ["pd-spotify-integration", "pd-spotify-integration2"],
-    NotificationSounds: ["pd-notification", "pd-playSound"],
+    FavoriteFriendsSection: [ 'pd-favorite-friends-tabbar' ],
+    InformationModal: [ 'pd-message-listener' ],
+    StatusPopup: [ 'pd-user' ],
+    ChannelTypingIntegration: [ 'pd-ct-integration' ],
+    SpotifyIntegration: [ 'pd-spotify-integration', 'pd-spotify-integration2' ],
+    NotificationSounds: [ 'pd-notification', 'pd-playSound' ],
     FriendsList: [
-      "pd-friendslist-tabbar",
-      "pd-friendslist-row",
-      "pd-friendslist",
+      'pd-friendslist-tabbar',
+      'pd-friendslist-row',
+      'pd-friendslist'
     ],
-    PinnedGuild: ["pd-pinned-guild-list"],
+    PinnedGuild: [ 'pd-pinned-guild-list' ]
   },
   Sounds: {
-    message1: "Message",
-    call_ringing: "Incoming Call",
-    user_join: "User Joining Voice Channel",
-  },
+    message1: 'Message',
+    call_ringing: 'Incoming Call',
+    user_join: 'User Joining Voice Channel'
+  }
 };

@@ -1,14 +1,14 @@
-const { Plugin } = require("powercord/entities");
-const { uninject } = require("powercord/injector");
-const Settings = require("./Settings");
-const { InjectionIDs } = require("./Constants");
-require("./utils/bootstrap");
+const { Plugin } = require('powercord/entities');
+const { uninject } = require('powercord/injector');
+const Settings = require('./components/settings/Settings');
+const { InjectionIDs } = require('./Constants');
+require('./utils/bootstrap');
 
 module.exports = class PinDMs extends Plugin {
   /**
    * Start the plugin
    */
-  async startPlugin() {
+  async startPlugin () {
     // Default settings handler
     this.DEFAULT_SETTINGS = {
       notifsounds: {},
@@ -16,62 +16,63 @@ module.exports = class PinDMs extends Plugin {
         infomodal: true,
         sortoptions: true,
         mutualguilds: true,
-        showtotal: true,
+        showtotal: true
       },
 
       // Updated settings
       general: {
         pinIcon: true,
         unreadAmount: true,
-        channelAmount: true,
+        channelAmount: true
       },
       recentOrder: {
         channelList: false,
-        guildList: false,
+        guildList: false
       },
       pindms: {
         dmCategories: {
-          "00000000000000000": {
-            id: "00000000000000000",
-            name: "Example",
+          '00000000000000000': {
+            id: '00000000000000000',
+            name: 'Example',
             pos: 0,
-            dms: [],
-          },
-        },
-      },
+            dms: []
+          }
+        }
+      }
     };
 
     // Register settings menu for PinDMs
-    powercord.api.settings.registerSettings("pindms", {
+    powercord.api.settings.registerSettings('pindms', {
       category: this.entityID,
-      label: "PinDMs",
-      render: Settings,
+      label: 'PinDMs',
+      render: Settings
     });
     // Handle CSS
-    this.loadStylesheet("style.scss");
+    this.loadStylesheet('style.scss');
 
     // Constants
     this.FRIEND_DATA = {
-      lastMessageID: {},
+      lastMessageID: {}
     };
 
     await this.start();
   }
 
-  async start() {
+  async start () {
     this.instances = {};
     if (
-      !this.settings.get("pindms") ||
-      !this.settings.get("pindms.general") ||
-      !this.settings.get("pindms.general.friendList")
+      !this.settings.get('pindms') ||
+      !this.settings.get('pindms.general') ||
+      !this.settings.get('pindms.general.friendList')
     ) {
       for (const setting of Object.keys(this.DEFAULT_SETTINGS)) {
         /* eslint-disable-line */ /* I know this is bad practice, hopefully I'll find a better solution soon */
-        if (this.DEFAULT_SETTINGS[setting])
+        if (this.DEFAULT_SETTINGS[setting]) {
           this.settings.set(
             setting,
             this.settings.get(setting, this.DEFAULT_SETTINGS[setting])
           );
+        }
       }
     }
 
@@ -82,7 +83,7 @@ module.exports = class PinDMs extends Plugin {
      */
 
     // Store each of the modules above into this object where we can load them later
-    this.MODULES = require("./modules");
+    this.MODULES = require('./modules');
     for (const module of Object.keys(this.MODULES)) {
       this.MODULES[module] = this.MODULES[module].bind(this);
     }
@@ -102,7 +103,7 @@ module.exports = class PinDMs extends Plugin {
    * When no module is specified, all modules are loaded by default.
    * @param {String} specific Pass a specific module name to load only that module
    */
-  load(specific) {
+  load (specific) {
     if (specific) {
       this.MODULES[specific]();
     } else {
@@ -117,13 +118,13 @@ module.exports = class PinDMs extends Plugin {
    * When no module is specified, the entire plugin is unloaded from Powercord.
    * @param {String} specific Pass a specific module name to unload only that module
    */
-  unload(specific) {
+  unload (specific) {
     if (specific) {
       for (const injection of InjectionIDs[specific]) {
         uninject(injection);
       }
     } else {
-      this.log("Plugin stopped");
+      this.log('Plugin stopped');
       for (const unload of Object.keys(this.MODULES)) {
         for (const injection of InjectionIDs[unload] || []) {
           uninject(injection);
@@ -132,8 +133,8 @@ module.exports = class PinDMs extends Plugin {
     }
   }
 
-  pluginWillUnload() {
-    powercord.api.settings.unregisterSettings("pindms");
+  pluginWillUnload () {
+    powercord.api.settings.unregisterSettings('pindms');
     this.unload();
   }
 
@@ -142,7 +143,7 @@ module.exports = class PinDMs extends Plugin {
    * When no module is specified, the entire plugin will reload
    * @param {String} specific Pass a specific module name to reload only that module
    */
-  async reload(...specific) {
+  async reload (...specific) {
     if (specific && specific.length) {
       for (const mod of specific) {
         this.log(`Reloading module '${mod}'`);
@@ -150,7 +151,7 @@ module.exports = class PinDMs extends Plugin {
         this.load(mod);
       }
     } else {
-      this.log("Reloading all modules");
+      this.log('Reloading all modules');
       this.unload();
       await this.start();
     }
@@ -161,7 +162,7 @@ module.exports = class PinDMs extends Plugin {
    * Overwrites the normal Powercord .log method.
    * @param {any} data Data to log
    */
-  log(data) {
-    console.log("%c[PinDMs]", "color: #ffeb3b", data);
+  log (data) {
+    console.log('%c[PinDMs]', 'color: #ffeb3b', data);
   }
 };

@@ -1,5 +1,5 @@
-const { getModule } = require("powercord/webpack");
-const { inject } = require("powercord/injector");
+const { getModule } = require('powercord/webpack');
+const { inject } = require('powercord/injector');
 
 /*
  * [ Notification Sounds ]
@@ -7,15 +7,15 @@ const { inject } = require("powercord/injector");
  */
 module.exports = async function () {
   let doPlayCustomSound = false;
-  const playSound = await getModule(["playSound"]);
-  const { getCurrentUser } = await getModule(["getCurrentUser"]);
+  const playSound = await getModule([ 'playSound' ]);
+  const { getCurrentUser } = await getModule([ 'getCurrentUser' ]);
   const makeTextChatNotification = await getModule([
-    "makeTextChatNotification",
+    'makeTextChatNotification'
   ]);
 
-  const custom = this.settings.get("notifsounds", {});
+  const custom = this.settings.get('notifsounds', {});
   const isPinned = (id) =>
-    Object.values(this.settings.get("pindms.dmCategories")).some((cat) =>
+    Object.values(this.settings.get('pindms.dmCategories')).some((cat) =>
       cat.dms.includes(id)
     );
 
@@ -41,13 +41,15 @@ module.exports = async function () {
   };
 
   inject(
-    "pd-playSound",
+    'pd-playSound',
     playSound,
-    "playSound",
+    'playSound',
     (e) => {
       if (doPlayCustomSound && custom[e[0]]) {
         play(e[0]);
-        if (doPlayCustomSound) doPlayCustomSound = false;
+        if (doPlayCustomSound) {
+          doPlayCustomSound = false;
+        }
         return false;
       }
       return e;
@@ -56,15 +58,15 @@ module.exports = async function () {
   );
 
   inject(
-    "pd-notification",
+    'pd-notification',
     makeTextChatNotification,
-    "makeTextChatNotification",
+    'makeTextChatNotification',
     (args, res) => {
       const self = getCurrentUser();
       const message = args[1];
       if (self.id !== message.author.id) {
-        if (isPinned(message.author.id) && custom["message1"]) {
-          this.log("Playing custom sound for favorited friend");
+        if (isPinned(message.author.id) && custom.message1) {
+          this.log('Playing custom sound for favorited friend');
           doPlayCustomSound = true;
         }
       }

@@ -24,26 +24,27 @@ function setupContextMenu (settingsMgr, channel) {
 
   const gListSetting = settingsMgr.get('pindms.dmCategories');
 
-  let id = null;
+  let dmID = null;
 
   if (channel.type === 3) {
-    id = channel.id;
+    dmID = channel.id;
   } else if (channel.type === 1) {
-    id = channel.recipients[0];
+    // eslint-disable-next-line prefer-destructuring
+    dmID = channel.recipients[0];
   }
 
-  if (!id) {
+  if (!dmID) {
     return;
   }
 
   if (gListSetting && typeof gListSetting === 'object') {
-    for (const [ _, item ] of Object.entries(gListSetting)) {
+    for (const item of Object.values(gListSetting)) {
       items.push({
         type: 'button',
         name: item.name,
         id: `${item.id}`,
         onClick () {
-          settingsMgr.push(`pindms.dmCategories.${item.id}.dms`, id, true);
+          settingsMgr.push(`pindms.dmCategories.${item.id}.dms`, dmID, true);
           helper.forceUpdateElement('#private-channels');
         }
       });
@@ -58,7 +59,7 @@ function setupContextMenu (settingsMgr, channel) {
     onClick () {
       const keys = Object.keys(settingsMgr.get('pindms.dmCategories') || {});
 
-      contextAction.addToNewCategoryModal(keys, id, (rndID, obj) => {
+      contextAction.addToNewCategoryModal(keys, dmID, (rndID, obj) => {
         settingsMgr.set(`pindms.dmCategories.${rndID}`, obj);
         helper.forceUpdateElement('#private-channels');
       });
@@ -120,7 +121,6 @@ module.exports = async function () {
         if (!res.props.className.includes('pd-pinChannel')) {
           res.props.className += ' pd-pinChannel';
         }
-        res.props.children.props.onClick = () => {};
         res.props.children = [
           React.createElement(
             Tooltip,
@@ -186,7 +186,7 @@ module.exports = async function () {
       const dmsCategories = settingsMgr.get('pindms.dmCategories');
       const idList = [];
 
-      for (const [ _, categories ] of Object.entries(dmsCategories)) {
+      for (const categories of Object.values(dmsCategories)) {
         idList.push(...categories.dms);
       }
 
