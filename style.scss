@@ -137,6 +137,10 @@
 .pd-notification-sounds {
   width: auto !important;
   padding-bottom: 64px;
+
+  .pd-text-input {
+    min-width: 200px;
+  }
 }
 
 .pd-notif-sound-settings-description {
@@ -321,4 +325,38 @@ html body .pd-ff-header {
 
 .pd-settings-tab-bar ~ .divider-3573oO {
   margin-bottom: 20px;
+}
+
+.pd-settings-card {
+  margin-bottom: 20px;
+  padding: 10px;
+
+  [data-list-id="color-picker"] {
+    margin-top: 10px;
+    animation: fade-in 1.5s;
+    justify-content: center;
+  }
+}
+
+.pd-text-input {
+  margin-bottom: 5px;
+  min-width: 50px;
+
+  &:not([class*="disabled"]) {
+    &:focus-within,
+    &:hover {
+      border-color: rgba(114, 137, 218, 0.3);
+    }
+  }
+}
+
+/** Animations **/
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

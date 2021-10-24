@@ -51,5 +51,13 @@ module.exports = {
   async getDefaultModuleMethodByKeyword (keyword) {
     const mod = await getModule((m) => this._getDefaultMethodByKeyword(m, keyword));
     return mod;
+  },
+
+  debounce (func, timeout = 300) {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => func.apply(this, args), timeout);
+    };
   }
 };

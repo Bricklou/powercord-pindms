@@ -18,5 +18,14 @@
   },
   "PD_NOTIF_SOUND_SETTINGS": {
     "NOTE": "Customize notification sounds specifically for favorited friends.\nYou can put a link to an MP3 file in the textbox, or leave it blank to play the default sound"
+  },
+
+  "PD_CATEGORIES_SETTINGS": {
+    "CATEGORY_REMOVE_BTN": "Remove",
+    "CATEGORY_NAME_PLACEHOLDER": "Category Name",
+    "OPEN_COLOR_PICKER": "Open color picker",
+    "CLOSE_COLOR_PICKER": "Close color picker",
+    "RESET_COLOR": "Reset color",
+    "COLOR_PLACEHOLDER": "Category color"
   }
 }

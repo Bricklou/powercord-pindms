@@ -1,9 +1,26 @@
-const { React, getModule, getModuleByDisplayName, i18n: { Messages } } = require('powercord/webpack');
-const { Flex, FormTitle, Button, settings: { SwitchItem, TextInput, ColorPickerInput } } = require('powercord/components');
+const {
+  React,
+  getModule,
+  getModuleByDisplayName,
+  i18n: { Messages }
+} = require('powercord/webpack');
+const {
+  Flex,
+  FormTitle,
+  Button,
+  settings: {
+    SwitchItem
+  }
+} = require('powercord/components');
+
+const contextAction = require('../../utils/contextActions');
 
 const TabBar = getModuleByDisplayName('TabBar', false);
+const TextInput = require('./TextInput');
 
 const { Sounds } = require('../../Constants');
+const CategoryCard = require('./CategoryCard');
+const helper = require('../../utils/helper');
 
 class Settings extends React.Component {
   constructor (props) {
@@ -16,7 +33,9 @@ class Settings extends React.Component {
       selectedItem: 'FRIENDLIST',
 
       friendList: props.getSetting('friendList', {}),
-      notifsounds: props.getSetting('notifsounds', {})
+      notifsounds: props.getSetting('notifsounds', {}),
+
+      playing: {}
     };
   }
 
@@ -79,12 +98,6 @@ class Settings extends React.Component {
   }
 
   renderFriendList () {
-    this.plugin.log(
-      Messages.PD_FRIENDLIST_SETTINGS.INFO_MODAL_NOTE,
-      this.state.friendList.infomodal,
-      Messages.PD_FRIENDLIST_SETTINGS.INFO_MODAL,
-      SwitchItem
-    );
     return <React.Fragment>
       <SwitchItem
         note={Messages.PD_FRIENDLIST_SETTINGS.INFO_MODAL_NOTE}
@@ -158,7 +171,24 @@ class Settings extends React.Component {
           <div style={{ float: 'right' }}>
             <div style={{ float: 'left' }}>
               <Button
-                onClick={() => playSound(sound)}
+                onClick={() => {
+                  if (!this.state.notifsounds[sound] || !this.state.notifsounds[sound].url) {
+                    playSound(sound);
+                    return;
+                  }
+                  if (this.state.playing[sound]) {
+                    this.state.playing[sound].pause();
+                    delete this.state.playing[sound];
+                  } else {
+                    const player = new Audio(this.state.playing[sound].url);
+                    player.volume = this.state.notifsounds[sound] ? this.state.notifsounds[sound].volume || 0.5 : 0.5;
+                    player.play();
+                    player.addEventListener('ended', () => {
+                      delete this.state.playing[sound];
+                    });
+                    this.state.playing[sound] = player;
+                  }
+                }}
                 className="pd-notification-sounds-icon"
               >
                 <Speaker></Speaker>
@@ -191,8 +221,6 @@ class Settings extends React.Component {
   }
 
   renderPinnedCategories () {
-    const ColorUtils = getModule([ 'isValidHex' ], false);
-
     const dmCategories = Object.values(
       this.props.getSetting('pindms.dmCategories')
         ? this.props.getSetting('pindms.dmCategories')
@@ -200,48 +228,51 @@ class Settings extends React.Component {
     );
 
     return <React.Fragment>
-      {dmCategories.map((c) => {
-        if (!c) {
-          return null;
-        }
-        const col = c.color ? ColorUtils.hex2int(c.color) : '';
-        return (
-          <div className="pd-setting-category">
-            <div>
-              <TextInput
-                defaultValue={c.name}
-                placeholder="category name"
-                onBlur={(e) =>
-                  this._updateCategoryName(c.id, e.target.value)
-                }
-              />
-              <Button
-                color={Button.Colors.RED}
-                onClick={() => this._deleteCategory(c.id)}
-              >
-              Remove
-              </Button>
-            </div>
-            <div>
-              <ColorPickerInput
-                customColor={col}
-                value={col}
-                defaultColor={col}
-                onChange={(value) => {
-                  const color = ColorUtils.int2hex(value);
-                  this._set(`pindms.dmCategories.${c.id}.color`, color);
-                  this.plugin.reload('CategoryChannel');
-                }}
-              >
-              Color
-              </ColorPickerInput>
-            </div>
-          </div>
-        );
-      })}
+      {dmCategories.filter(c => c !== null).map((c) =>
+        <CategoryCard
+          category={c}
+          onNameChange={(newName) => {
+            console.log(newName);
+            if (!newName || !this.props.getSetting(`pindms.dmCategories.${c.id}`)) {
+              return;
+            }
+            this._set(`pindms.dmCategories.${c.id}.name`, newName);
+
+            helper.debounce(() => {
+              this.plugin.reload('CategoryChannel');
+            });
+          }}
+
+          onColorChange={(newColor) => {
+            if (!newColor) {
+              this._set(`pindms.dmCategories.${c.id}.color`);
+            } else {
+              this._set(`pindms.dmCategories.${c.id}.color`, newColor);
+            }
+
+            helper.debounce(() => {
+              this.plugin.reload('CategoryChannel');
+            });
+          }}
+
+          onDeleteCategory={() => {
+            this._set(`pindms.dmCategories.${c.id}`);
+            this.plugin.reload('CategoryChannel');
+          }}
+        />
+      )}
       <Button
         color={Button.Colors.BRAND}
-        onClick={() => this._addCategory(dmCategories)}
+        onClick={() => {
+          contextAction.addToNewCategoryModal(
+            Object.keys(this.props.getSetting('pindms.dmCategories') || {}),
+            null,
+            (rndID, obj) => {
+              this._set(`pindms.dmCategories.${rndID}`, obj);
+              this.plugin.reload('CategoryChannel');
+            }
+          );
+        }}
       >
       Add
       </Button>
