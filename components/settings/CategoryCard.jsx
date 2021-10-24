@@ -98,8 +98,8 @@ class CategoryCard extends React.PureComponent {
       return [
         <Divider/>,
         <ColorPickerInput
-          default={ColorUtils.hex2int('00000000')}
-          value={ColorUtils.hex2int(this.props.category.color || '00000000', '000000')}
+          default={ColorUtils.hex2int('#8e9297')}
+          value={ColorUtils.hex2int(this.props.category.color || '#8e9297', '#8e9297')}
           onChange={(value) => this.updateColor(value)}
         />
       ];
