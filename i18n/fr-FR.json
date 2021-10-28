@@ -1,0 +1,32 @@
+{
+  "PD_FRIENDLIST": "Liste d'amis",
+  "PD_NOTIF_SOUND": "Son de notification",
+  "PD_PINNED_CATEGORIES": "Catégories épinglés",
+
+  "PD_FRIENDLIST_SETTINGS": {
+    "SORT_OPTIONS": "Afficher les options de trie",
+    "SORT_OPTIONS_NOTE": "Ajoute des options de trie dans la liste d'amis",
+
+    "MUTUAL_GUILDS": "Afficher les serveurs en commun",
+    "MUTUAL_GUILDS_NOTE": "Afficher les serveurs en commun dans la liste d'amis",
+
+    "SHOW_TOTAL": "Afficher le compte total tout/demandes/bloqué",
+    "SHOW_TOTAL_NOTE": "Afficher le compte total tout/demandes/bloqué dans la liste d'amis"
+  },
+  "PD_NOTIF_SOUND_SETTINGS": {
+    "NOTE": "Customize notification sounds specifically for favorited friends.\nYou can put a link to an MP3 file in the textbox, or leave it blank to play the default sound"
+  },
+
+  "PD_CATEGORIES_SETTINGS": {
+    "CATEGORY_REMOVE_BTN": "Supprimer",
+    "CATEGORY_NAME_PLACEHOLDER": "Nom de la catégorie",
+    "OPEN_COLOR_PICKER": "Ouvrir le sélecteur de couleur",
+    "CLOSE_COLOR_PICKER": "Fermer le sélecteur de couleur",
+    "RESET_COLOR": "Réinitialiser la couleur",
+    "COLOR_PLACEHOLDER": "Couleur de la catégorie"
+  },
+
+  "PD_ADD_2_NEW_CATEGORY": "Ajouter dans une nouvelle catégorie",
+  "PD_PIN_2_CHANNELLIST": "Épingler dans la liste des discussions",
+  "PD_UNPIN_FROM_CATEGORY": "Désépingler de la catégorie"
+}

@@ -24,5 +24,9 @@
     "CLOSE_COLOR_PICKER": "Close color picker",
     "RESET_COLOR": "Reset color",
     "COLOR_PLACEHOLDER": "Category color"
-  }
+  },
+
+  "PD_ADD_2_NEW_CATEGORY": "Add to new category",
+  "PD_PIN_2_CHANNELLIST": "Pin to channel list",
+  "PD_UNPIN_FROM_CATEGORY": "Unpin from the category"
 }

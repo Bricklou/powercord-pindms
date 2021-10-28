@@ -1,4 +1,4 @@
-const { React } = require('powercord/webpack');
+const { React, i18n: { Messages } } = require('powercord/webpack');
 const { getModule } = require('powercord/webpack');
 const { inject } = require('powercord/injector');
 const { findInReactTree } = require('powercord/util');
@@ -62,7 +62,7 @@ module.exports = async function () {
 
         groupList.push(
           React.createElement(MenuItem, {
-            label: 'Add to new Category',
+            label: Messages.PD_ADD_2_NEW_CATEGORY,
             id: 'pd-new-channellist',
             color: 'colorBrand',
             action: () => {
@@ -90,7 +90,7 @@ module.exports = async function () {
                 MenuItem,
                 {
                   id: 'pd-add',
-                  label: 'Pin to channel list'
+                  label: Messages.PD_PIN_2_CHANNELLIST
                 },
                 groupList
               )
@@ -103,7 +103,7 @@ module.exports = async function () {
         group.push(
           React.createElement(MenuItem, {
             id: 'pd-remove',
-            label: 'Unpin from the category',
+            label: Messages.PD_UNPIN_FROM_CATEGORY,
             color: 'colorDanger',
             action: () => {
               if (!currentCategory && !currentCategory.id) {
