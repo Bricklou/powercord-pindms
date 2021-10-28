@@ -118,9 +118,6 @@ module.exports = async function () {
       const isPinned = () => settingsMgr.has('pindms.dmCategories') &&
         Object.values(settingsMgr.get('pindms.dmCategories')).map((cat) => cat.dms).flat(1).includes(getID());
 
-      Object.values(settingsMgr.get('pindms.dmCategories')).some((cat) => cat.dms.includes(this.props.channel?.id));
-
-
       if (
         this.props.channel &&
         !isPinned()
