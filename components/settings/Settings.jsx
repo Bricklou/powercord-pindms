@@ -100,18 +100,6 @@ class Settings extends React.Component {
   renderFriendList () {
     return <React.Fragment>
       <SwitchItem
-        note={Messages.PD_FRIENDLIST_SETTINGS.INFO_MODAL_NOTE}
-        style={{ marginTop: '16px' }}
-        value={this.state.friendList.infomodal}
-        onChange={(value) => {
-          this._set('friendList.infomodal', value);
-          this.plugin.reload('InformationModal');
-        }}
-      >
-        {Messages.PD_FRIENDLIST_SETTINGS.INFO_MODAL}
-      </SwitchItem>
-
-      <SwitchItem
         note={Messages.PD_FRIENDLIST_SETTINGS.SORT_OPTIONS_NOTE}
         value={this.state.friendList.sortoptions}
         onChange={(value) => {
@@ -228,38 +216,38 @@ class Settings extends React.Component {
     );
 
     return <React.Fragment>
-      {dmCategories.filter(c => c !== null).map((c) =>
-        <CategoryCard
-          category={c}
-          onNameChange={(newName) => {
-            console.log(newName);
-            if (!newName || !this.props.getSetting(`pindms.dmCategories.${c.id}`)) {
-              return;
-            }
-            this._set(`pindms.dmCategories.${c.id}.name`, newName);
+      {dmCategories.filter(c => !!c).map((c) => (<CategoryCard
+        category={c}
+        onNameChange={(newName) => {
+          console.log(newName);
+          if (!newName || !this.props.getSetting(`pindms.dmCategories.${c.id}`)) {
+            return;
+          }
+          this._set(`pindms.dmCategories.${c.id}.name`, newName);
 
-            helper.debounce(() => {
-              this.plugin.reload('CategoryChannel');
-            });
-          }}
-
-          onColorChange={(newColor) => {
-            if (!newColor) {
-              this._set(`pindms.dmCategories.${c.id}.color`);
-            } else {
-              this._set(`pindms.dmCategories.${c.id}.color`, newColor);
-            }
-
-            helper.debounce(() => {
-              this.plugin.reload('CategoryChannel');
-            });
-          }}
-
-          onDeleteCategory={() => {
-            this._set(`pindms.dmCategories.${c.id}`);
+          helper.debounce(() => {
             this.plugin.reload('CategoryChannel');
-          }}
-        />
+          });
+        }}
+
+        onColorChange={(newColor) => {
+          if (!newColor) {
+            this._set(`pindms.dmCategories.${c.id}.color`);
+          } else {
+            this._set(`pindms.dmCategories.${c.id}.color`, newColor);
+          }
+
+          helper.debounce(() => {
+            this.plugin.reload('CategoryChannel');
+          });
+        }}
+
+        onDeleteCategory={() => {
+          delete dmCategories[c.id];
+          this._set(`pindms.dmCategories.${c.id}`);
+          this.plugin.reload('CategoryChannel');
+        }}
+      />)
       )}
       <Button
         color={Button.Colors.BRAND}

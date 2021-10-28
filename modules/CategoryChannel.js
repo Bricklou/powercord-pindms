@@ -1,7 +1,6 @@
 const { inject } = require('powercord/injector');
-const { open: openModal } = require('powercord/modal');
 const {
-  Icons: { Keyboard, Pin },
+  Icons: { Pin },
   Tooltip,
   ContextMenu
 } = require('powercord/components');
@@ -13,7 +12,6 @@ const {
 } = require('powercord/webpack');
 
 const FavoriteFriends = require('../components/FavoriteFriends');
-const InformationModal = require('../components/InformationModal');
 const helper = require('../utils/helper');
 const Channel = require('../components/Channel');
 
@@ -86,7 +84,6 @@ function setupContextMenu (settingsMgr, channel) {
  * Creates and populates the "Favorited Friends" section on the private channel/DMs screen
  */
 module.exports = async function () {
-  const _this = this;
   const settingsMgr = require('../utils/settingsMgr')(this.settings);
   const PrivateChannel = await getModuleByDisplayName('PrivateChannel');
   const ConnectedPrivateChannelsList = await helper.getDefaultModule(
@@ -109,50 +106,24 @@ module.exports = async function () {
     PrivateChannel.prototype,
     'render',
     function (args, res) {
+      const getID = () => {
+        if (this.props.channel.type === 3) {
+          return this.props.channel.id;
+        } else if (this.props.channel.type === 1) {
+          return this.props.channel.recipients[0];
+        }
+        return null;
+      };
+
+      const isPinned = () => settingsMgr.has('pindms.dmCategories') &&
+        Object.values(settingsMgr.get('pindms.dmCategories')).map((cat) => cat.dms).flat(1).includes(getID());
+
+      Object.values(settingsMgr.get('pindms.dmCategories')).some((cat) => cat.dms.includes(this.props.channel?.id));
+
+
       if (
-        settingsMgr.has('pindms.dmCategories') &&
-        Object.values(settingsMgr.get('pindms.dmCategories')).some((cat) =>
-          cat.dms.includes(this.props.user?.id)
-        )
-      ) {
-        if (!settingsMgr.get('infomodal')) {
-          return res;
-        }
-        if (!res.props.className.includes('pd-pinChannel')) {
-          res.props.className += ' pd-pinChannel';
-        }
-        res.props.children = [
-          React.createElement(
-            Tooltip,
-            { text: 'User information',
-              position: 'top' },
-            React.createElement(Keyboard, {
-              className: 'pd-information',
-              onClick: (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                const info = _this.FRIEND_DATA.lastMessageID[this.props.user.id];
-                openModal(() =>
-                  React.createElement(InformationModal, {
-                    user: {
-                      ...this.props.user,
-                      isSystemUser: () => false,
-                      isSystemDM: () => false
-                    },
-                    channel: !info ? 'nothing' : info.channel,
-                    message: !info ? 'nothing' : info.id
-                  })
-                );
-              }
-            })
-          ),
-          res.props.children
-        ];
-      } else if (
         this.props.channel &&
-        !Object.values(settingsMgr.get('pindms.dmCategories')).some((cat) =>
-          cat.dms.includes(this.props.channel?.id)
-        )
+        !isPinned()
       ) {
         const pinMenu = setupContextMenu(settingsMgr, this.props.channel);
 

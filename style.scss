@@ -19,9 +19,6 @@
   -webkit-box-flex: 0;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  & [aria-label="User Information"] {
-    margin: 0px 5px;
-  }
 }
 
 .channel-2QD9_O > .layout-2DM8Md:hover {
@@ -88,7 +85,6 @@
   width: auto !important;
 }
 
-.pd-information,
 .pd-pin {
   width: 15px;
   min-width: 15px;
@@ -111,14 +107,6 @@
   &.collapsed {
     transform: rotate(90deg);
   }
-}
-
-.pd-information:hover {
-  opacity: 0.9;
-}
-
-.channel-2QD9_O:hover .pd-information {
-  display: block;
 }
 
 .pd-user-settings {

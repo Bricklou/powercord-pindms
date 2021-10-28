@@ -4,9 +4,6 @@
   "PD_PINNED_CATEGORIES": "Pinned Categories",
 
   "PD_FRIENDLIST_SETTINGS": {
-    "INFO_MODAL": "Information Modal",
-    "INFO_MODAL_NOTE": "Toggles the functionality of the information button within the DM list on favorited friends",
-
     "SORT_OPTIONS": "Show sort options",
     "SORT_OPTIONS_NOTE": "Have sort options in the friend list",
 

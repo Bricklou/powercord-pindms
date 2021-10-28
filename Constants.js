@@ -30,7 +30,6 @@ module.exports = {
       'pd-direct-messages-mount'
     ],
     FavoriteFriendsSection: [ 'pd-favorite-friends-tabbar' ],
-    InformationModal: [ 'pd-message-listener' ],
     StatusPopup: [ 'pd-user' ],
     ChannelTypingIntegration: [ 'pd-ct-integration' ],
     SpotifyIntegration: [ 'pd-spotify-integration', 'pd-spotify-integration2' ],
@@ -39,8 +38,7 @@ module.exports = {
       'pd-friendslist-tabbar',
       'pd-friendslist-row',
       'pd-friendslist'
-    ],
-    PinnedGuild: [ 'pd-pinned-guild-list' ]
+    ]
   },
   Sounds: {
     message1: 'Message',
