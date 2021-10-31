@@ -15,7 +15,6 @@ module.exports = class PinDMs extends Plugin {
     this.DEFAULT_SETTINGS = {
       notifsounds: {},
       friendList: {
-        infomodal: true,
         sortoptions: true,
         mutualguilds: true,
         showtotal: true
@@ -32,14 +31,7 @@ module.exports = class PinDMs extends Plugin {
         guildList: false
       },
       pindms: {
-        dmCategories: {
-          '00000000000000000': {
-            id: '00000000000000000',
-            name: 'Example',
-            pos: 0,
-            dms: []
-          }
-        }
+        dmCategories: {}
       }
     };
 
@@ -59,21 +51,20 @@ module.exports = class PinDMs extends Plugin {
 
   async start () {
     this.instances = {};
-    if (
-      !this.settings.get('pindms') ||
-      !this.settings.get('pindms.general') ||
-      !this.settings.get('pindms.general.friendList')
-    ) {
-      for (const setting of Object.keys(this.DEFAULT_SETTINGS)) {
-        /* eslint-disable-line */ /* I know this is bad practice, hopefully I'll find a better solution soon */
-        if (this.DEFAULT_SETTINGS[setting]) {
-          this.settings.set(
-            setting,
-            this.settings.get(setting, this.DEFAULT_SETTINGS[setting])
-          );
-        }
+    for (const settingKey of Object.keys(this.DEFAULT_SETTINGS)) {
+      let newCfg;
+
+      const cfg = this.settings.get(settingKey);
+
+      if (cfg) {
+        newCfg = Object.assign(this.DEFAULT_SETTINGS[settingKey], cfg);
+      } else {
+        newCfg = this.DEFAULT_SETTINGS[settingKey];
       }
+
+      this.settings.set(settingKey, newCfg);
     }
+
 
     /*
      * Modules
