@@ -28,5 +28,8 @@
 
   "PD_ADD_2_NEW_CATEGORY": "Add to new category",
   "PD_PIN_2_CHANNELLIST": "Pin to channel list",
-  "PD_UNPIN_FROM_CATEGORY": "Unpin from the category"
+  "PD_UNPIN_FROM_CATEGORY": "Unpin from the category",
+
+  "PD_SEARCHBAR_PLACEHOLDER": "Name",
+  "PD_FRIEND_COLUMN_PINNED": "Pinned"
 }

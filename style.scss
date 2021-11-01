@@ -266,6 +266,11 @@ html body .pd-ff-header {
   padding: 0px 30px;
 }
 
+.pd-cellContent {
+  display: flex;
+  align-items: center;
+}
+
 @media screen and (max-width: 975px) {
   .pd-nameCell {
     padding: 0px 10px;

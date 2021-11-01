@@ -34,7 +34,7 @@ module.exports = ({ title, _this }) => {
         { key: 'statusIndex',
           label: Messages.FRIENDS_COLUMN_STATUS },
         { key: 'isPinned',
-          label: 'pinned' }
+          label: Messages.PD_FRIEND_COLUMN_PINNED }
       ].map((data) => (
         <div
           className={[
@@ -65,7 +65,7 @@ module.exports = ({ title, _this }) => {
             }
           }}
         >
-          <div className={headers.headerCellContent}>
+          <div className="pd-cellContent">
             {data.label}{' '}
             {sortKey === data.key && (
               <Icon
@@ -78,7 +78,7 @@ module.exports = ({ title, _this }) => {
       ))}
       <SearchBar
         query={query}
-        placeholder="name"
+        placeholder={Messages.PD_SEARCHBAR_PLACEHOLDER}
         onChange={(c) => {
           setQuery(c);
           _this.searchQuery = c;

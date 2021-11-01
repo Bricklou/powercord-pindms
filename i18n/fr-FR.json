@@ -28,5 +28,8 @@
 
   "PD_ADD_2_NEW_CATEGORY": "Ajouter dans une nouvelle catégorie",
   "PD_PIN_2_CHANNELLIST": "Épingler dans la liste des discussions",
-  "PD_UNPIN_FROM_CATEGORY": "Désépingler de la catégorie"
+  "PD_UNPIN_FROM_CATEGORY": "Désépingler de la catégorie",
+
+  "PD_SEARCHBAR_PLACEHOLDER": "Nom",
+  "PD_FRIEND_COLUMN_PINNED": "Épinglé"
 }
