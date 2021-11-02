@@ -79,7 +79,7 @@ module.exports = ({ title, _this }) => {
       <SearchBar
         query={query}
         placeholder={Messages.PD_SEARCHBAR_PLACEHOLDER}
-        onChange={(c) => {
+        onQueryChange={(c) => {
           setQuery(c);
           _this.searchQuery = c;
           setTimeout(() => updateList(), 100);
