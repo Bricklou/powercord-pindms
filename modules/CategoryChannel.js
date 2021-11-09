@@ -17,6 +17,8 @@ const Channel = require('../components/Channel');
 
 const contextAction = require('../utils/contextActions');
 
+const manifest = require('../manifest.json');
+
 function setupContextMenu (settingsMgr, channel) {
   const items = [];
 
@@ -84,8 +86,15 @@ function setupContextMenu (settingsMgr, channel) {
  * Creates and populates the "Favorited Friends" section on the private channel/DMs screen
  */
 module.exports = async function () {
-  const settingsMgr = require('../utils/settingsMgr')(this.settings);
-  const PrivateChannel = await getModuleByDisplayName('PrivateChannel');
+  const { version } = manifest;
+  if (this.settings.get('version') !== version) {
+    this.settings.set('version', version);
+    powercord.api.notices.sendAnnouncement('pd-announcement', {
+      color: 'red',
+      message: 'Discord broke how DM list and Private message work, so until I find a way to fix the PinDM plugin, it will be disabled. Sorry for the inconvenient.'
+    });
+  }
+  /* const PrivateChannel = await getModuleByDisplayName('PrivateChannel');
   const ConnectedPrivateChannelsList = await helper.getDefaultModule(
     'ConnectedPrivateChannelsList'
   );
@@ -265,5 +274,5 @@ module.exports = async function () {
   helper.forceUpdateElement('#private-channels');
 
   ConnectedPrivateChannelsList.default.displayName =
-    'ConnectedPrivateChannelsList';
+    'ConnectedPrivateChannelsList'; */
 };

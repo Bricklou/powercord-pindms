@@ -216,7 +216,7 @@ class Settings extends React.Component {
     );
 
     return <React.Fragment>
-      {dmCategories.filter(c => !!c).map((c) => (<CategoryCard
+      {dmCategories.filter(c => !!c).sort((a, b) => a.pos - b.pos).map((c) => (<CategoryCard
         category={c}
         onNameChange={(newName) => {
           console.log(newName);

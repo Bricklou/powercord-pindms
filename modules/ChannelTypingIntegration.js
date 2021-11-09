@@ -20,9 +20,8 @@ module.exports = async function () {
       '_renderTypingElement',
       (args, res) => {
         if (
-          Object.values(this.settings.get('dmCategories')).some((cat) =>
-            cat.dms.some(dm => Object.keys(typingStore.getTypingUsers(args[0].channel.id)).includes(dm))
-          )
+          Object.values(this.settings.get('dmCategories')).map(c => c.dms).flat(1)
+            .some(fr => Object.keys(typingStore.getTypingUsers(args[0].id)).includes(fr))
         ) {
           res.props.children.props.style.filter = 'sepia(300%) hue-rotate(313deg) saturate(1600%)';
         }
