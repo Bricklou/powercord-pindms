@@ -1,27 +1,26 @@
-const { inject } = require("powercord/injector");
+const { inject } = require('powercord/injector');
 const {
   Icons: { Pin },
   Tooltip,
-  ContextMenu,
-} = require("powercord/components");
+  ContextMenu
+} = require('powercord/components');
 const {
   React,
   getModuleByDisplayName,
   getModule,
-  contextMenu,
-} = require("powercord/webpack");
+  contextMenu
+} = require('powercord/webpack');
 
-const FavoriteFriends = require("../components/FavoriteFriends");
-const helper = require("../utils/helper");
-const Channel = require("../components/Channel");
+const FavoriteFriends = require('../components/FavoriteFriends');
+const helper = require('../utils/helper');
+const Channel = require('../components/Channel');
 
-const contextAction = require("../utils/contextActions");
+const contextAction = require('../utils/contextActions');
 
-const manifest = require("../manifest.json");
 
-function setupContextMenu(settingsMgr, channel) {
+function setupContextMenu (settingsMgr, channel) {
   const items = [];
-  const gListSetting = settingsMgr.get("pindms.dmCategories");
+  const gListSetting = settingsMgr.get('pindms.dmCategories');
 
   let dmID = null;
 
@@ -36,43 +35,43 @@ function setupContextMenu(settingsMgr, channel) {
     return;
   }
 
-  if (gListSetting && typeof gListSetting === "object") {
+  if (gListSetting && typeof gListSetting === 'object') {
     for (const item of Object.values(gListSetting)) {
       items.push({
-        type: "button",
+        type: 'button',
         name: item.name,
         id: `${item.id}`,
-        onClick() {
+        onClick () {
           settingsMgr.push(`pindms.dmCategories.${item.id}.dms`, dmID, true);
-          helper.forceUpdateElement("#private-channels");
-        },
+          helper.forceUpdateElement('#private-channels');
+        }
       });
     }
   }
 
   items.push({
-    type: "button",
-    name: "Add to new Category",
-    id: "pd-add-pin-shortcut",
-    color: "colorBrand",
-    onClick() {
-      const keys = Object.keys(settingsMgr.get("pindms.dmCategories") || {});
+    type: 'button',
+    name: 'Add to new Category',
+    id: 'pd-add-pin-shortcut',
+    color: 'colorBrand',
+    onClick () {
+      const keys = Object.keys(settingsMgr.get('pindms.dmCategories') || {});
 
       contextAction.addToNewCategoryModal(keys, dmID, (rndID, obj) => {
         settingsMgr.set(`pindms.dmCategories.${rndID}`, obj);
-        helper.forceUpdateElement("#private-channels");
+        helper.forceUpdateElement('#private-channels');
       });
-    },
+    }
   });
 
   const menu = React.createElement(ContextMenu, {
-    itemGroups: [items],
+    itemGroups: [ items ]
   });
 
   const menucont = React.createElement(
-    "div",
+    'div',
     {
-      id: "pd-add-pin-context-container",
+      id: 'pd-add-pin-context-container'
     },
     menu
   );
@@ -85,27 +84,27 @@ function setupContextMenu(settingsMgr, channel) {
  * Creates and populates the "Favorited Friends" section on the private channel/DMs screen
  */
 module.exports = async function () {
-  const settingsMgr = require("../utils/settingsMgr")(this.settings);
-  const PrivateChannel = await getModuleByDisplayName("PrivateChannel");
+  const settingsMgr = require('../utils/settingsMgr')(this.settings);
+  const PrivateChannel = await getModuleByDisplayName('PrivateChannel');
   const ConnectedPrivateChannelsList = await helper.getDefaultModule(
-    "ConnectedPrivateChannelsList"
+    'ConnectedPrivateChannelsList'
   );
-  const channelStore = await getModule(["getChannel", "hasChannel"]);
+  const channelStore = await getModule([ 'getChannel', 'hasChannel' ]);
   const classes = {
-    ...(await getModule(["channel", "closeButton"])),
-    ...(await getModule(["avatar", "muted", "selected"])),
-    ...(await getModule(["privateChannelsHeaderContainer"])),
+    ...(await getModule([ 'channel', 'closeButton' ])),
+    ...(await getModule([ 'avatar', 'muted', 'selected' ])),
+    ...(await getModule([ 'privateChannelsHeaderContainer' ]))
   };
-  const { lastMessageId } = getModule(["lastMessageId"], false);
-  const { getDMFromUserId } = getModule(["getDMFromUserId"], false);
+  const { lastMessageId } = getModule([ 'lastMessageId' ], false);
+  const { getDMFromUserId } = getModule([ 'getDMFromUserId' ], false);
 
   this.categoriesInstances = [];
 
   // Patch PrivateChannel
-  /*inject(
-    "pd-direct-messages-channel",
+  inject(
+    'pd-direct-messages-channel',
     PrivateChannel.prototype,
-    "render",
+    'render',
     function (args, res) {
       const getID = () => {
         if (this.props.channel.type === 3) {
@@ -117,8 +116,8 @@ module.exports = async function () {
       };
 
       const isPinned = () =>
-        settingsMgr.has("pindms.dmCategories") &&
-        Object.values(settingsMgr.get("pindms.dmCategories"))
+        settingsMgr.has('pindms.dmCategories') &&
+        Object.values(settingsMgr.get('pindms.dmCategories'))
           .map((cat) => cat.dms)
           .flat(1)
           .includes(getID());
@@ -126,30 +125,42 @@ module.exports = async function () {
       if (this.props.channel && !isPinned()) {
         const pinMenu = setupContextMenu(settingsMgr, this.props.channel);
 
-        res.props.children = [
-          React.createElement(
+        const child = res.props.children();
+        const new_child = child;
+        res.props.children = () => {
+          const pin_component = React.createElement(
             Tooltip,
-            { text: "Pin", position: "top", className: "pd-pin" },
+            { text: 'Pin',
+              position: 'top',
+              className: 'pd-pin' },
             React.createElement(Pin, {
-              className: "pd-pin",
+              className: 'pd-pin',
               onClick: (e) => {
                 contextMenu.openContextMenu(e, () => pinMenu);
-              },
+              }
             })
-          ),
-          res.props.children,
-        ];
+          );
+
+          new_child.props.children = [
+            pin_component,
+            child.props.children
+          ];
+
+          return new_child;
+        };
       }
 
       return res;
     }
-  )*/ // Patch DM list
+  );
+
+  // Patch DM list
   inject(
-    "pd-direct-messages",
+    'pd-direct-messages',
     ConnectedPrivateChannelsList,
-    "default",
+    'default',
     (args, res) => {
-      const dmsCategories = settingsMgr.get("pindms.dmCategories");
+      const dmsCategories = settingsMgr.get('pindms.dmCategories');
       const idList = [];
 
       for (const categories of Object.values(dmsCategories)) {
@@ -201,7 +212,7 @@ module.exports = async function () {
               category,
               count: category.dms.length,
               settingsMgr,
-              key: category.id,
+              key: category.id
             });
 
             this.categoriesInstances.push(el);
@@ -210,15 +221,13 @@ module.exports = async function () {
       }
 
       res.props.children.props.children = [
-        ...res.props.children.props.children,
+        ...res.props.children.props.children
       ];
-      console.log("e");
       this.categoriesInstances.forEach((instance) => {
         const { category } = instance.props;
         instance.props.key = `pd-${category.id}`;
 
         res.props.children.props.children.push(instance);
-        console.log(category);
         if (category.expanded) {
           let { dms } = category;
           dms = dms.sort(
@@ -233,10 +242,9 @@ module.exports = async function () {
               selected:
                 (getDMFromUserId(userId) || userId) ===
                 res.props.children.props.selectedChannelId,
-              key: `${userId}`,
+              key: `${userId}`
             })
           );
-          console.log("dms added");
           res.props.children.props.children.push(dms);
         } else {
           const dm = category.dms.find(
@@ -250,7 +258,7 @@ module.exports = async function () {
               React.createElement(Channel, {
                 channelId: getDMFromUserId(dm) || dm,
                 selected: true,
-                key: `${dm}`,
+                key: `${dm}`
               })
             );
           }
@@ -263,8 +271,8 @@ module.exports = async function () {
     }
   );
 
-  helper.forceUpdateElement(".scroller-1JbKMe");
+  helper.forceUpdateElement('.scroller-1JbKMe');
 
   ConnectedPrivateChannelsList.default.displayName =
-    "ConnectedPrivateChannelsList";
+    'ConnectedPrivateChannelsList';
 };
