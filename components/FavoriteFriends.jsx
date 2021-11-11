@@ -26,7 +26,7 @@ module.exports = class FavoriteFriends extends React.PureComponent {
           this.setState({
             expanded: !this.state.expanded
           });
-          settingsMgr.set(`pindms.dmCategories.${category.id}.expanded`, e);
+          settingsMgr.set(`pindms.dmCategories.${category.id}.expanded`, !this.state.expanded);
           await helper.forceUpdateElement('.scroller-1JbKMe');
         }}
       >
