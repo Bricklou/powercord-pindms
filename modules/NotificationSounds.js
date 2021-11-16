@@ -6,7 +6,7 @@ const { inject } = require('powercord/injector');
  * Handles custom notification sounds
  */
 module.exports = async function () {
-  let doPlayCustomSound = false;
+  let doPlayCustomSound = true;
   const playSound = await getModule([ 'playSound' ]);
   const { getCurrentUser } = await getModule([ 'getCurrentUser' ]);
   const makeTextChatNotification = await getModule([
