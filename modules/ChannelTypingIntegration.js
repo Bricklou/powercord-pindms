@@ -13,21 +13,18 @@ module.exports = async function () {
       resolve(`${__dirname}/../../channel-typing/index.js`)
     );
     const typingStore = await getModule([ 'getTypingUsers' ]);
+    const settingsMgr = require('../utils/settingsMgr')(this.settings);
 
-    inject(
-      'pd-ct-integration',
-      require.cache[typingModule].exports.prototype,
-      '_renderTypingElement',
+    inject('pd-ct-integration', require.cache[typingModule].exports.prototype, '_renderTypingElement',
       (args, res) => {
-        if (
-          Object.values(this.settings.get('dmCategories')).map(c => c.dms).flat(1)
-            .some(fr => Object.keys(typingStore.getTypingUsers(args[0].id)).includes(fr))
-        ) {
+        const savedDMs = Object.values(settingsMgr.get('pindms.dmCategories')).map(c => c.dms).flat(1);
+        const typingUsers = Object.keys(typingStore.getTypingUsers(args[0].channel?.id));
+
+        if (savedDMs.some(fr => typingUsers.includes(fr))) {
           res.props.children.props.style.filter = 'sepia(300%) hue-rotate(313deg) saturate(1600%)';
         }
         return res;
-      }
-    );
+      });
   } catch (e) {
     this.log(
       '"channel-typing" doesn\'t seem to be present in the plugins folder, unloading companion module'
