@@ -19,7 +19,7 @@ module.exports = async function () {
   const _injectTabBar = async () => {
     const TabBar = (await getModuleByDisplayName('TabBar')).prototype;
     const { getRelationships } = await getModule([ 'getRelationships' ]);
-    const { getStatus } = await getModule([ 'getStatus' ]);
+    const { getStatus } = await getModule([ 'isMobileOnline' ]);
     inject('pd-friendslist-tabbar', TabBar, 'render', (_, res) => {
       if (res.props['aria-label'] !== Messages.FRIENDS) {
         return res;
