@@ -271,7 +271,7 @@ module.exports = async function () {
     }
   );
 
-  helper.forceUpdateElement('.scroller-1JbKMe');
+  helper.forceUpdateElement('.scroller-WSmht3');
 
   ConnectedPrivateChannelsList.default.displayName =
     'ConnectedPrivateChannelsList';

@@ -21,13 +21,13 @@ module.exports = class FavoriteFriends extends React.PureComponent {
     return [
       // Header
       <h2
-        className={`pd-pd-category-header ${classes.privateChannelsHeaderContainer} container-2ax-kl`}
+        className={`pd-category-header ${classes.privateChannelsHeaderContainer} container-q97qHp`}
         onClick={async () => {
           this.setState({
             expanded: !this.state.expanded
           });
           settingsMgr.set(`pindms.dmCategories.${category.id}.expanded`, !this.state.expanded);
-          await helper.forceUpdateElement('.scroller-1JbKMe');
+          await helper.forceUpdateElement('.scroller-WSmht3');
         }}
       >
         <span
