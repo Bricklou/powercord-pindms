@@ -180,10 +180,7 @@ module.exports = async function () {
       if (this.categoriesInstances) {
         for (let i = 0; i < this.categoriesInstances.length; i++) {
           if (
-            this.categoriesInstances[i] &&
-            this.categoriesInstances[i].props &&
-            this.categoriesInstances[i].props.category &&
-            !(this.categoriesInstances[i].props.category.id in dmsCategories)
+            !(this.categoriesInstances[i]?.props?.category?.id in dmsCategories)
           ) {
             delete this.categoriesInstances[i];
           }
@@ -212,7 +209,18 @@ module.exports = async function () {
               category,
               count: category.dms.length,
               settingsMgr,
-              key: category.id
+              key: category.id,
+              onClicked: async (event, elem, expanded) =>{
+                if (event.shiftKey) {
+                  this.categoriesInstances.forEach(async element => {
+                    if (element.props.category.id !== category.id) {
+                      await element.props.setExpanded(false);
+                    }
+                  });
+                } else {
+                  await elem.setExpanded(!expanded);
+                }
+              }
             });
 
             this.categoriesInstances.push(el);

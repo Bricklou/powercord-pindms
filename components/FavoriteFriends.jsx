@@ -6,14 +6,21 @@ module.exports = class FavoriteFriends extends React.PureComponent {
     super(props);
     // Dirty trick to be able to update the component
     props.update = this.forceUpdate.bind(this);
+    props.setExpanded = this.setExpanded.bind(this);
 
     this.state = {
       expanded: this.props.category.expanded ?? true
     };
   }
 
+  async setExpanded (expanded) {
+    this.setState({ expanded });
+    this.props.settingsMgr.set(`pindms.dmCategories.${this.props.category.id}.expanded`, expanded);
+    await helper.forceUpdateElement('.scroller-WSmht3');
+  }
+
   render () {
-    const { classes, category, count, settingsMgr } = this.props;
+    const { classes, category, count, settingsMgr, onClicked } = this.props;
     if (!classes || !category || !category.dms.length || !settingsMgr) {
       return null;
     }
@@ -22,12 +29,12 @@ module.exports = class FavoriteFriends extends React.PureComponent {
       // Header
       <h2
         className={`pd-category-header ${classes.privateChannelsHeaderContainer} container-q97qHp`}
-        onClick={async () => {
-          this.setState({
+        onClick={async (e) => { if (onClicked) await onClicked(e, this, this.state.expanded);
+          /*this.setState({
             expanded: !this.state.expanded
           });
           settingsMgr.set(`pindms.dmCategories.${category.id}.expanded`, !this.state.expanded);
-          await helper.forceUpdateElement('.scroller-WSmht3');
+          await helper.forceUpdateElement('.scroller-WSmht3');*/
         }}
       >
         <span
