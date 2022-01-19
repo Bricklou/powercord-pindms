@@ -239,9 +239,7 @@ module.exports = async function () {
         if (category.expanded) {
           let { dms } = category;
           dms = dms.sort(
-            (a, b) =>
-              lastMessageId(getDMFromUserId(b)) -
-              lastMessageId(getDMFromUserId(a))
+            (a, b) => lastMessageId(getDMFromUserId(b) || b) - lastMessageId(getDMFromUserId(a) || a)
           );
 
           dms = dms.map((userId) =>
