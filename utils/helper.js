@@ -1,4 +1,5 @@
 const { getModule } = require('powercord/webpack');
+const { inject, uninject } = require('powercord/injector');
 
 module.exports = {
   async getDefaultModule (module) {
@@ -59,5 +60,32 @@ module.exports = {
       clearTimeout(timer);
       timer = setTimeout(() => func.apply(this, args), timeout);
     };
+  },
+  // thanks jooby and xinos https://github.com/Juby210/view-raw/blob/master/index.js#L100-L124
+  async lazyPatchContextMenu(displayName, patch) {
+    const filter = m => m.default && m.default.displayName === displayName
+    const m = getModule(filter, false)
+    if (m) patch(m)
+    else {
+      const module = getModule([ 'openContextMenuLazy' ], false)
+      const ran = Math.random().toPrecision(4).replace('0.', '')
+      inject(`pindms-lazy-menu-${ran}`, module, 'openContextMenuLazy', args => {
+        const lazyRender = args[1]
+        args[1] = async () => {
+          const render = await lazyRender(args[0])
+  
+          return (config) => {
+            const menu = render(config)
+            if (menu?.type?.displayName === displayName && patch) {
+              uninject(`pindms-lazy-menu-${ran}`)
+              patch(getModule(filter, false))
+              patch = false
+            }
+            return menu
+          }
+        }
+        return args
+      }, true)
+    }
   }
 };
