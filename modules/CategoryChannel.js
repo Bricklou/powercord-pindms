@@ -2,13 +2,12 @@ const { inject } = require('powercord/injector');
 const {
   Icons: { Pin },
   Tooltip,
-  ContextMenu
 } = require('powercord/components');
 const {
   React,
   getModuleByDisplayName,
   getModule,
-  contextMenu
+  contextMenu,
 } = require('powercord/webpack');
 
 const FavoriteFriends = require('../components/FavoriteFriends');
@@ -16,68 +15,6 @@ const helper = require('../utils/helper');
 const Channel = require('../components/Channel');
 
 const contextAction = require('../utils/contextActions');
-
-
-function setupContextMenu (settingsMgr, channel) {
-  const items = [];
-  const gListSetting = settingsMgr.get('pindms.dmCategories');
-
-  let dmID = null;
-
-  if (channel.type === 3) {
-    dmID = channel.id;
-  } else if (channel.type === 1) {
-    // eslint-disable-next-line prefer-destructuring
-    dmID = channel.recipients[0];
-  }
-
-  if (!dmID) {
-    return;
-  }
-
-  if (gListSetting && typeof gListSetting === 'object') {
-    for (const item of Object.values(gListSetting)) {
-      items.push({
-        type: 'button',
-        name: item.name,
-        id: `${item.id}`,
-        onClick () {
-          settingsMgr.push(`pindms.dmCategories.${item.id}.dms`, dmID, true);
-          helper.forceUpdateElement('#private-channels');
-        }
-      });
-    }
-  }
-
-  items.push({
-    type: 'button',
-    name: 'Add to new Category',
-    id: 'pd-add-pin-shortcut',
-    color: 'colorBrand',
-    onClick () {
-      const keys = Object.keys(settingsMgr.get('pindms.dmCategories') || {});
-
-      contextAction.addToNewCategoryModal(keys, dmID, (rndID, obj) => {
-        settingsMgr.set(`pindms.dmCategories.${rndID}`, obj);
-        helper.forceUpdateElement('#private-channels');
-      });
-    }
-  });
-
-  const menu = React.createElement(ContextMenu, {
-    itemGroups: [ items ]
-  });
-
-  const menucont = React.createElement(
-    'div',
-    {
-      id: 'pd-add-pin-context-container'
-    },
-    menu
-  );
-
-  return menucont;
-}
 
 /*
  * [ Friend DM Channel ]
@@ -115,39 +52,29 @@ module.exports = async function () {
         return null;
       };
 
-      const isPinned = () =>
-        settingsMgr.has('pindms.dmCategories') &&
-        Object.values(settingsMgr.get('pindms.dmCategories'))
-          .map((cat) => cat.dms)
-          .flat(1)
-          .includes(getID());
+      const pinMenu = contextAction.setupContextMenu(settingsMgr, this.props.channel);
+      const child = res.props.children();
+      const new_child = child;
+      res.props.children = () => {
+        const pin_component = React.createElement(
+          Tooltip,
+          { text: 'Pin',
+            position: 'top',
+            className: 'pd-pin' },
+          React.createElement(Pin, {
+            className: 'pd-pin',
+            onClick: (e) => {
+              contextMenu.openContextMenu(e, () => pinMenu);
+            }
+          })
+        );
 
-      if (this.props.channel && !isPinned()) {
-        const pinMenu = setupContextMenu(settingsMgr, this.props.channel);
+        new_child.props.children = [
+          pin_component,
+          child.props.children
+        ];
 
-        const child = res.props.children();
-        const new_child = child;
-        res.props.children = () => {
-          const pin_component = React.createElement(
-            Tooltip,
-            { text: 'Pin',
-              position: 'top',
-              className: 'pd-pin' },
-            React.createElement(Pin, {
-              className: 'pd-pin',
-              onClick: (e) => {
-                contextMenu.openContextMenu(e, () => pinMenu);
-              }
-            })
-          );
-
-          new_child.props.children = [
-            pin_component,
-            child.props.children
-          ];
-
-          return new_child;
-        };
+        return new_child;
       }
 
       return res;

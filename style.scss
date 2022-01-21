@@ -343,6 +343,15 @@ html body .pd-ff-header {
   }
 }
 
+.pd-guildpin {
+  cursor: pointer;
+  .wrapper-1VLyxH { 
+    margin: 8px auto;
+    height: 48px !important;
+    width: 48px !important;
+  }
+}
+
 /** Animations **/
 @keyframes fade-in {
   from {
