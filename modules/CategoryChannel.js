@@ -53,7 +53,7 @@ module.exports = async function () {
       };
 
       const pinMenu = contextAction.setupContextMenu(settingsMgr, this.props.channel);
-      const child = res.props.children();
+      const child = res.props.children({ role: 'listitem' });
       const new_child = child;
       res.props.children = () => {
         const pin_component = React.createElement(
@@ -69,10 +69,7 @@ module.exports = async function () {
           })
         );
 
-        new_child.props.children = [
-          pin_component,
-          child.props.children
-        ];
+        new_child.props.children.props.children.splice(1, 0, pin_component);
 
         return new_child;
       }
