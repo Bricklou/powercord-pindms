@@ -31,7 +31,8 @@ module.exports = class PinDMs extends Plugin {
         guildList: false
       },
       pindms: {
-        dmCategories: {}
+        dmCategories: {},
+        serverlist: []
       }
     };
 
