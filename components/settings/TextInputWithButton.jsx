@@ -34,7 +34,6 @@ const { TextItem } = require("powercord/components/settings");
 const Button = getModule((m) => m.ButtonLink, false).default;
 
 const colorUtils = getModule(["isValidHex"], false);
-const classes = getModule(["editIcon"], false);
 
 module.exports = class TextInputWithButton extends React.PureComponent {
   constructor(props) {
@@ -66,9 +65,8 @@ module.exports = class TextInputWithButton extends React.PureComponent {
     return (
       <Flex shrink={1} grow={0} style={{ margin: 0 }}>
         <Button
-          className={classes.button}
           disabled={props.disabled}
-          size={Button.Sizes.MIN}
+          size={Button.Sizes.MEDIUM}
           color={Button.Colors.GREY}
           look={Button.Looks.GHOST}
           onClick={props.onButtonClick}
@@ -78,9 +76,9 @@ module.exports = class TextInputWithButton extends React.PureComponent {
               : null,
           }}
         >
-          <span className={classes.text}>{props.buttonText}</span>
+          <span>{props.buttonText}</span>
           <span
-            className={`${props.buttonIcon} ${classes.editIcon}`}
+            className={`${props.buttonIcon}`}
             style={this.iconStyles}
           ></span>
         </Button>
@@ -91,15 +89,12 @@ module.exports = class TextInputWithButton extends React.PureComponent {
   render() {
     return (
       <div
-        className={[
-          "bsi-button-text-input",
-          this.props.disabled && classes.disabled,
-        ]
+        className={["bsi-button-text-input", this.props.disabled]
           .filter(Boolean)
           .join(" ")}
       >
-        <Flex className={classes.layout}>
-          {this.renderInput(this.props)}
+        <Flex>
+          {/* this.renderInput(this.props) */}
           {this.renderButton(this.props)}
         </Flex>
       </div>
