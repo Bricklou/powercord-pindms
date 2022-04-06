@@ -27,59 +27,77 @@
  *
  */
 
-const { React, getModule } = require('powercord/webpack');
-const { Flex } = require('powercord/components');
+const { React, getModule } = require("powercord/webpack");
+const { Flex } = require("powercord/components");
+const { TextItem } = require("powercord/components/settings");
 
-const Button = getModule(m => m.ButtonLink, false).default;
+const Button = getModule((m) => m.ButtonLink, false).default;
 
-const colorUtils = getModule([ 'isValidHex' ], false);
-const classes = getModule([ 'container', 'editIcon' ], false);
+const colorUtils = getModule(["isValidHex"], false);
+const classes = getModule(["editIcon"], false);
 
 module.exports = class TextInputWithButton extends React.PureComponent {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
-    this.handleOnChange = (e) => typeof props.onChange === 'function' && props.onChange(e.currentTarget.value);
+    this.handleOnChange = (e) =>
+      typeof props.onChange === "function" &&
+      props.onChange(e.currentTarget.value);
     this.iconStyles = {
-      color: 'var(--text-normal)',
+      color: "var(--text-normal)",
       lineHeight: 0,
-      backgroundImage: 'none',
-      marginTop: 0
+      backgroundImage: "none",
+      marginTop: 0,
     };
   }
 
-  renderInput (props) {
-    return <Flex.Child className={classes.input.split(' ').splice(1).join(' ')} style={{ cursor: 'auto' }}>
-      <input
-        type='text'
+  renderInput(props) {
+    return (
+      <TextItem
         value={props.defaultValue}
         placeholder={props.placeholder}
         disabled={props.disabled}
         onChange={this.handleOnChange.bind(this)}
       />
-    </Flex.Child>;
+    );
   }
 
-  renderButton (props) {
-    return <Flex shrink={1} grow={0} style={{ margin: 0 }}>
-      <Button
-        className={classes.button}
-        disabled={props.disabled}
-        size={Button.Sizes.MIN}
-        color={Button.Colors.GREY}
-        look={Button.Looks.GHOST}
-        onClick={props.onButtonClick}
-        style={{ backgroundColor: props.buttonColor ? colorUtils.hex2rgb(props.buttonColor, 0.25) : null }}
-      >
-        <span className={classes.text}>{props.buttonText}</span>
-        <span className={`${props.buttonIcon} ${classes.editIcon}`} style={this.iconStyles}></span>
-      </Button>
-    </Flex>;
-  }
-
-  render () {
+  renderButton(props) {
     return (
-      <div className={[ 'bsi-button-text-input', classes.container, classes.hasValue, this.props.disabled && classes.disabled ].filter(Boolean).join(' ')}>
+      <Flex shrink={1} grow={0} style={{ margin: 0 }}>
+        <Button
+          className={classes.button}
+          disabled={props.disabled}
+          size={Button.Sizes.MIN}
+          color={Button.Colors.GREY}
+          look={Button.Looks.GHOST}
+          onClick={props.onButtonClick}
+          style={{
+            backgroundColor: props.buttonColor
+              ? colorUtils.hex2rgb(props.buttonColor, 0.25)
+              : null,
+          }}
+        >
+          <span className={classes.text}>{props.buttonText}</span>
+          <span
+            className={`${props.buttonIcon} ${classes.editIcon}`}
+            style={this.iconStyles}
+          ></span>
+        </Button>
+      </Flex>
+    );
+  }
+
+  render() {
+    return (
+      <div
+        className={[
+          "bsi-button-text-input",
+          this.props.disabled && classes.disabled,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <Flex className={classes.layout}>
           {this.renderInput(this.props)}
           {this.renderButton(this.props)}

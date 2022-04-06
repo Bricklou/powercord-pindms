@@ -1,112 +1,120 @@
 const {
   React,
   getModule,
-  i18n: { Messages }
-} = require('powercord/webpack');
+  i18n: { Messages },
+} = require("powercord/webpack");
 const {
   Flex,
   Button,
   Card,
   Divider,
-  settings: { ColorPickerInput }
-} = require('powercord/components');
+  settings: { ColorPickerInput, TextInput },
+} = require("powercord/components");
 
-const ColorUtils = getModule([ 'isValidHex' ], false);
-const classes = getModule([ 'card', 'pulseBorder' ], false);
-const TextInput = require('./TextInput');
-const TextInputWithButton = require('./TextInputWithButton');
+const ColorUtils = getModule(["isValidHex"], false);
+const classes = getModule(["card", "pulseBorder"], false);
+const TextInputWithButton = require("./TextInputWithButton");
 
 class CategoryCard extends React.PureComponent {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.handleNameChange = (value) => {
-      if (typeof props.onNameChange === 'function') {
+      if (typeof props.onNameChange === "function") {
         props.onNameChange(value);
       }
     };
 
     this.handleColorChange = (value) => {
-      if (typeof props.onColorChange === 'function') {
+      if (typeof props.onColorChange === "function") {
         props.onColorChange(value);
       }
     };
 
     this.handleDeleteCategory = () => {
-      if (typeof props.onDeleteCategory === 'function') {
+      if (typeof props.onDeleteCategory === "function") {
         props.onDeleteCategory();
       }
     };
 
     this.state = {
-      showPicker: false
+      showPicker: false,
     };
   }
 
-  render () {
+  render() {
     return (
       <Flex direction={Flex.Direction.VERTICAL} className="pd-category-card">
         <Flex>
-          <Flex.Child basis='70%'>
+          <Flex.Child basis="70%">
             <></>
             <TextInput
               defaultValue={this.props.category.name}
-              placeholder={Messages.PD_CATEGORIES_SETTINGS.CATEGORY_NAME_PLACEHOLDER}
+              placeholder={
+                Messages.PD_CATEGORIES_SETTINGS.CATEGORY_NAME_PLACEHOLDER
+              }
               onChange={this.handleNameChange.bind(this)}
             />
           </Flex.Child>
-          <Flex.Child basis='30%'>
-            <Button color={Button.Colors.RED} onClick={this.handleDeleteCategory.bind(this)}>
+          <Flex.Child basis="30%">
+            <Button
+              color={Button.Colors.RED}
+              onClick={this.handleDeleteCategory.bind(this)}
+            >
               {Messages.PD_CATEGORIES_SETTINGS.CATEGORY_REMOVE_BTN}
             </Button>
           </Flex.Child>
         </Flex>
 
         <Flex>
-          <Flex.Child basis='70%'>
+          <Flex.Child basis="70%">
             <></>
             <TextInputWithButton
               placeholder={Messages.PD_CATEGORIES_SETTINGS.COLOR_PLACEHOLDER}
-              buttonText={!this.state.showPicker
-                ? Messages.PD_CATEGORIES_SETTINGS.OPEN_COLOR_PICKER
-                : Messages.PD_CATEGORIES_SETTINGS.CLOSE_COLOR_PICKER}
-              buttonColor={this.props.category.color || ''}
-              buttonIcon={'fas fa-palette'}
+              buttonText={
+                !this.state.showPicker
+                  ? Messages.PD_CATEGORIES_SETTINGS.OPEN_COLOR_PICKER
+                  : Messages.PD_CATEGORIES_SETTINGS.CLOSE_COLOR_PICKER
+              }
+              buttonColor={this.props.category.color || ""}
+              buttonIcon={"fas fa-palette"}
               onButtonClick={() => {
                 this.setState({
-                  showPicker: !this.state.showPicker
+                  showPicker: !this.state.showPicker,
                 });
               }}
               onChange={(value) => this.updateColor(value)}
-              defaultValue={this.props.category.color || ''}
+              defaultValue={this.props.category.color || ""}
             />
           </Flex.Child>
-          <Flex.Child basis='30%'>
+          <Flex.Child basis="30%">
             <Button onClick={() => this.resetColor()}>
               {Messages.PD_CATEGORIES_SETTINGS.RESET_COLOR}
             </Button>
           </Flex.Child>
         </Flex>
         {this.renderColorPicker()}
-
       </Flex>
     );
   }
 
-  renderColorPicker () {
+  renderColorPicker() {
     if (this.state.showPicker) {
       return [
-        <Divider/>,
+        <Divider />,
         <ColorPickerInput
-          default={ColorUtils.hex2int('#8e9297')}
-          value={ColorUtils.hex2int(this.props.category.color || '#8e9297', '#8e9297')}
+          default={ColorUtils.hex2int("#8e9297")}
+          value={ColorUtils.hex2int(
+            this.props.category.color || "#8e9297",
+            "#8e9297"
+          )}
           onChange={(value) => this.updateColor(value)}
-        />
+        />,
       ];
     }
   }
 
-  updateColor (value) {
+  updateColor(value) {
     if (ColorUtils.isValidHex(value)) {
       this.handleColorChange(value);
     } else {
@@ -114,13 +122,16 @@ class CategoryCard extends React.PureComponent {
     }
   }
 
-  resetColor () {
+  resetColor() {
     this.handleColorChange();
   }
 }
 
-module.exports = React.memo(props => (
-  <Card editable={false} className={[ 'pd-settings-card', classes.card ].join(' ')}>
+module.exports = React.memo((props) => (
+  <Card
+    editable={false}
+    className={["pd-settings-card", classes.card].join(" ")}
+  >
     <CategoryCard {...props} />
   </Card>
 ));

@@ -14,7 +14,8 @@
     "SHOW_TOTAL_NOTE": "Show total amount for all/requested/blocked"
   },
   "PD_NOTIF_SOUND_SETTINGS": {
-    "NOTE": "Customize notification sounds specifically for favorited friends.\nYou can put a link to an MP3 file in the textbox, or leave it blank to play the default sound"
+    "NOTE": "Customize notification sounds specifically for favorited friends.\nYou can put a link to an MP3 file in the textbox, or leave it blank to play the default sound",
+    "WARNING": "Warning !!! This part is not working. If you want to make it work, don't hesitate to make PR to the project. Thanks !!!"
   },
 
   "PD_CATEGORIES_SETTINGS": {
