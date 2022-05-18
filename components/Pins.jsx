@@ -1,6 +1,7 @@
 const {
   getModule,
   React,
+  React: { useState, useEffect },
   constants: { Routes },
   FluxDispatcher,
   contextMenu,
@@ -8,6 +9,14 @@ const {
 const { Tooltip } = require("powercord/components");
 const settingsMgr = require("../utils/settingsMgr");
 const contextAction = require("../utils/contextActions");
+
+const { default: PrivateChannel } = getModule(["DirectMessage"], false);
+const { getUser } = getModule(["getUser", "findByTag"], false);
+const typing = getModule(["isTyping"], false);
+const { transitionTo } = getModule(["transitionTo"], false);
+const { getDMFromUserId, getChannel } = getModule(["getDMFromUserId"], false);
+const Flux = getModule(["useStateFromStores"], false);
+const StatusStore = getModule(["isMobileOnline"], false);
 
 module.exports = class Pins extends React.PureComponent {
   serverlistUpdate(e) {
@@ -33,80 +42,73 @@ module.exports = class Pins extends React.PureComponent {
   }
 };
 
-class Pin extends React.PureComponent {
-  constructor(props) {
-    super(props);
+function Pin(props) {
+  const [firstRender, setFirstRender] = useState(false);
+  const [rerender, setRerender] = useState(false);
 
-    this.statusChange = this.statusChange.bind(this);
-    this.state = {
-      firstRender: true,
+  const forceUpdate = () => setRerender(!rerender);
+
+  function statusChange() {
+    e.user?.id === props.userId && forceUpdate();
+  }
+
+  useEffect(() => {
+    FluxDispatcher.subscribe("PRESENCE_UPDATE", statusChange);
+
+    return () => {
+      FluxDispatcher.unsubscribe("PRESENCE_UPDATE", statusChange);
     };
-  }
+  }, []);
 
-  statusChange(e) {
-    e.user?.id === this.props.userId && this.forceUpdate();
-  }
-
-  componentDidMount() {
-    FluxDispatcher.subscribe("PRESENCE_UPDATE", this.statusChange);
-  }
-
-  componentWillUnmount() {
-    FluxDispatcher.unsubscribe("PRESENCE_UPDATE", this.statusChange);
-  }
-
-  render() {
-    if (this.state.firstRender) {
-      setTimeout(() => this.setState({ firstRender: false }));
-      return null;
-    }
-    const { userId } = this.props;
-    const { default: PrivateChannel } = getModule(["DirectMessage"], false);
-    const { getUser } = getModule(["getUser", "findByTag"], false);
-    const { isMobileOnline, getStatus } = getModule(["isMobileOnline"], false);
-    const { isTyping } = getModule(["isTyping"], false);
-    const { transitionTo } = getModule(["transitionTo"], false);
-    const { getDMFromUserId, getChannel } = getModule(
-      ["getDMFromUserId"],
-      false
-    );
-
-    const user = getUser(userId);
-    const channel = getChannel(getDMFromUserId(userId) || userId);
-
-    const avatar = PrivateChannel.prototype.renderAvatar.call({
-      props: {
-        channel,
-        user,
-        isMobile: isMobileOnline(userId),
-        status: getStatus(userId),
-        isTyping: isTyping(getDMFromUserId(userId), userId),
-      },
+  if (firstRender) {
+    setTimeout(() => {
+      setFirstRender(false);
     });
-    avatar.props.src = avatar.props.src.replace("size=32", "size=64");
-
-    return (
-      <Tooltip
-        text={
-          channel.type === 3 ? channel.name : channel.rawRecipients[0].username
-        }
-        position="left"
-      >
-        <div
-          onContextMenu={(e) =>
-            contextMenu.openContextMenu(e, () =>
-              contextAction.setupContextMenu(
-                settingsMgr(this.props.settings),
-                channel
-              )
-            )
-          }
-          onClick={() => transitionTo(Routes.CHANNEL("@me", channel.id))}
-          className="pd-guildpin"
-        >
-          {avatar}
-        </div>
-      </Tooltip>
-    );
+    return null;
   }
+
+  const user = getUser(props.userId);
+  const channel = getChannel(getDMFromUserId(props.userId) || props.userId);
+
+  const [isMobileOnline, status] = Flux.useStateFromStoresArray(
+    [StatusStore],
+    () => {
+      const status = StatusStore?.getStatus?.(props.userId);
+      const isMobileOnline = StatusStore?.isMobileOnline?.(props.userId);
+
+      return [isMobileOnline, status];
+    }
+  );
+
+  const avatar = PrivateChannel.prototype.renderAvatar.call({
+    props: {
+      channel,
+      user,
+      isMobile: isMobileOnline,
+      status,
+      isTyping: typing.isTyping(getDMFromUserId(props.userId), props.userId),
+    },
+  });
+  avatar.props.src = avatar.props.src.replace("size=32", "size=64");
+
+  return (
+    <Tooltip
+      text={
+        channel.type === 3 ? channel.name : channel.rawRecipients[0].username
+      }
+      position="left"
+    >
+      <div
+        onContextMenu={(e) =>
+          contextMenu.openContextMenu(e, () =>
+            contextAction.setupContextMenu(settingsMgr(props.settings), channel)
+          )
+        }
+        onClick={() => transitionTo(Routes.CHANNEL("@me", channel.id))}
+        className="pd-guildpin"
+      >
+        {avatar}
+      </div>
+    </Tooltip>
+  );
 }
