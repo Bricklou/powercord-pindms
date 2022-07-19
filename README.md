@@ -20,7 +20,6 @@ Allows you to pin DMs, making them appear at the top of your DMs/ServerList
     - [x] Category color
     - [x] Category name
     - [x] Manage categories (create/delete)
-- [ ] Per user custom notification sound (when I have the time: don't hesitate to propose a PR)
 
 ## Contributing
 

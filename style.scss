@@ -122,26 +122,9 @@
   height: auto;
 }
 
-.pd-notification-sounds {
-  width: auto !important;
-  padding-bottom: 64px;
-
-  .pd-text-input {
-    min-width: 200px;
-  }
-}
-
-.pd-notif-sound-settings-description {
-  margin-bottom: 20px;
-}
-
 .pd-dm-category-count {
   background-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 0px 1px 2px rgb(0 0 0 / 5%);
-}
-
-.pd-notification-sounds > div > div > div > .divider-3573oO.marginTop20-3TxNs6 {
-  display: none;
 }
 
 .searchBar-2_Yu-C {
@@ -345,7 +328,7 @@ html body .pd-ff-header {
 
 .pd-guildpin {
   cursor: pointer;
-  .wrapper-1VLyxH { 
+  .wrapper-1VLyxH {
     margin: 8px auto;
     height: 48px !important;
     width: 48px !important;

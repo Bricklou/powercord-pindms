@@ -1,56 +1,55 @@
-const { Plugin } = require('powercord/entities');
-const { uninject } = require('powercord/injector');
-const Settings = require('./components/settings/Settings');
-const { InjectionIDs } = require('./Constants');
-require('./utils/bootstrap');
+const { Plugin } = require("powercord/entities");
+const { uninject } = require("powercord/injector");
+const Settings = require("./components/settings/Settings");
+const { InjectionIDs } = require("./Constants");
+require("./utils/bootstrap");
 
-const i18n = require('./i18n');
+const i18n = require("./i18n");
 
 module.exports = class PinDMs extends Plugin {
   /**
    * Start the plugin
    */
-  async startPlugin () {
+  async startPlugin() {
     // Default settings handler
     this.DEFAULT_SETTINGS = {
-      notifsounds: {},
       friendList: {
         sortoptions: true,
         mutualguilds: true,
-        showtotal: true
+        showtotal: true,
       },
 
       // Updated settings
       general: {
         pinIcon: true,
         unreadAmount: true,
-        channelAmount: true
+        channelAmount: true,
       },
       recentOrder: {
         channelList: false,
-        guildList: false
+        guildList: false,
       },
       pindms: {
         dmCategories: {},
-        serverlist: []
-      }
+        serverlist: [],
+      },
     };
 
     powercord.api.i18n.loadAllStrings(i18n);
 
     // Register settings menu for PinDMs
-    powercord.api.settings.registerSettings('pindms', {
+    powercord.api.settings.registerSettings("pindms", {
       category: this.entityID,
-      label: 'PinDMs',
-      render: Settings
+      label: "PinDMs",
+      render: Settings,
     });
     // Handle CSS
-    this.loadStylesheet('style.scss');
+    this.loadStylesheet("style.scss");
 
     await this.start();
   }
 
-  async start () {
+  async start() {
     this.instances = {};
     for (const settingKey of Object.keys(this.DEFAULT_SETTINGS)) {
       let newCfg;
@@ -66,7 +65,6 @@ module.exports = class PinDMs extends Plugin {
       this.settings.set(settingKey, newCfg);
     }
 
-
     /*
      * Modules
      * Handled by the module resolver outside of `startPlugin`.
@@ -74,7 +72,7 @@ module.exports = class PinDMs extends Plugin {
      */
 
     // Store each of the modules above into this object where we can load them later
-    this.MODULES = require('./modules');
+    this.MODULES = require("./modules");
     for (const module of Object.keys(this.MODULES)) {
       this.MODULES[module] = this.MODULES[module].bind(this);
     }
@@ -94,7 +92,7 @@ module.exports = class PinDMs extends Plugin {
    * When no module is specified, all modules are loaded by default.
    * @param {String} specific Pass a specific module name to load only that module
    */
-  load (specific) {
+  load(specific) {
     if (specific) {
       this.MODULES[specific]();
     } else {
@@ -109,13 +107,13 @@ module.exports = class PinDMs extends Plugin {
    * When no module is specified, the entire plugin is unloaded from Powercord.
    * @param {String} specific Pass a specific module name to unload only that module
    */
-  unload (specific) {
+  unload(specific) {
     if (specific) {
       for (const injection of InjectionIDs[specific]) {
         uninject(injection);
       }
     } else {
-      this.log('Plugin stopped');
+      this.log("Plugin stopped");
       for (const unload of Object.keys(this.MODULES)) {
         for (const injection of InjectionIDs[unload] || []) {
           uninject(injection);
@@ -124,8 +122,8 @@ module.exports = class PinDMs extends Plugin {
     }
   }
 
-  pluginWillUnload () {
-    powercord.api.settings.unregisterSettings('pindms');
+  pluginWillUnload() {
+    powercord.api.settings.unregisterSettings("pindms");
     this.unload();
   }
 
@@ -134,7 +132,7 @@ module.exports = class PinDMs extends Plugin {
    * When no module is specified, the entire plugin will reload
    * @param {String} specific Pass a specific module name to reload only that module
    */
-  async reload (...specific) {
+  async reload(...specific) {
     if (specific && specific.length) {
       for (const mod of specific) {
         this.log(`Reloading module '${mod}'`);
@@ -142,7 +140,7 @@ module.exports = class PinDMs extends Plugin {
         this.load(mod);
       }
     } else {
-      this.log('Reloading all modules');
+      this.log("Reloading all modules");
       this.unload();
       await this.start();
     }
@@ -153,7 +151,7 @@ module.exports = class PinDMs extends Plugin {
    * Overwrites the normal Powercord .log method.
    * @param {any} data Data to log
    */
-  log (...data) {
-    console.log('%c[PinDMs]', 'color: #ffeb3b', ...data);
+  log(...data) {
+    console.log("%c[PinDMs]", "color: #ffeb3b", ...data);
   }
 };

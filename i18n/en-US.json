@@ -1,23 +1,14 @@
 {
   "PD_FRIENDLIST": "Friend List",
-  "PD_NOTIF_SOUND": "Notification Sound",
   "PD_PINNED_CATEGORIES": "Pinned Categories",
-
   "PD_FRIENDLIST_SETTINGS": {
     "SORT_OPTIONS": "Show sort options",
     "SORT_OPTIONS_NOTE": "Have sort options in the friend list",
-
     "MUTUAL_GUILDS": "Show mutual guilds",
     "MUTUAL_GUILDS_NOTE": "Show mutual guilds in the friend list",
-
     "SHOW_TOTAL": "Show total amount for all/requested/blocked",
     "SHOW_TOTAL_NOTE": "Show total amount for all/requested/blocked"
   },
-  "PD_NOTIF_SOUND_SETTINGS": {
-    "NOTE": "Customize notification sounds specifically for favorited friends.\nYou can put a link to an MP3 file in the textbox, or leave it blank to play the default sound",
-    "WARNING": "Warning !!! This part is not working. If you want to make it work, don't hesitate to make PR to the project. Thanks !!!"
-  },
-
   "PD_CATEGORIES_SETTINGS": {
     "CATEGORY_REMOVE_BTN": "Remove",
     "CATEGORY_NAME_PLACEHOLDER": "Category Name",
@@ -26,11 +17,9 @@
     "RESET_COLOR": "Reset color",
     "COLOR_PLACEHOLDER": "Category color"
   },
-
   "PD_ADD_2_NEW_CATEGORY": "Add to new category",
   "PD_PIN_2_CHANNELLIST": "Pin to channel list",
   "PD_UNPIN_FROM_CATEGORY": "Unpin from {cat}",
-
   "PD_SEARCHBAR_PLACEHOLDER": "Name",
   "PD_FRIEND_COLUMN_PINNED": "Pinned"
 }
